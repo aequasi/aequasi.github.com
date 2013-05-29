@@ -87,9 +87,9 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">IP Based Htaccess Restriction</h1>
-	<div class="entry-content" itemprop="articleBody"><p>A couple months ago, I was looking for a way to restrict a development site in such a way, that while people were at work (where we have a static IP), and then require an .htpasswd file for everyone outside.</p>
+	<div class="entry-content" itemprop="articleBody"><p>A couple months ago, I was looking for a way to restrict a development site in such a way, that while people were at work (where we have a static IP), and then require an <code>.htpasswd</code> file for everyone outside.</p>
 
-<p>Well, it was actually kind of simple. After youve got your .htpasswd file set up, just throw this inside your vhost</p>
+<p>Well, it was actually kind of simple. After youve got your <code>.htpasswd</code> file set up, just throw this inside your vhost</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -114,7 +114,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>For your environment, you should change the <code>AuthName</code>, the <code>AuthUserFile</code>, the <code>Limit</code> (maybe, <code>GET</code> and <code>POST</code> might be enough), and the IP (<code>12.34.56.789</code>).</p>
+<p>For your environment, you should change the <code>AuthName</code>, the <code>AuthUserFile</code>, the <code>Limit</code> (maybe, <code>GET</code> and <code>POST</code> might be enough), and the <code>IP</code> (<code>12.34.56.789</code>).</p>
 
 <p>Change out the variables for what your environment requires, and you should be all set.</p>
 </div>
