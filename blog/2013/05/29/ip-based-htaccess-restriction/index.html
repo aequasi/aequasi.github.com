@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Blog Archives - Seductive Programming Blog</title>
+	<title>IP Based Htaccess Restriction - Seductive Programming Blog</title>
 	<meta name="author" content="Aaron Scherer">
 
 	
-	<meta name="description" content="2013 May 29 apache, htaccess Comments IP Based Htaccess Restriction May 24 PHP Comments Checking Named Class Inheritance May 23 bash Comments &hellip;">
+	<meta name="description" content="Use .htaccess to restrict people outside of a given IP to an .htpasswd file">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,7 +17,7 @@
 
 	<link href="/rss.xml" rel="alternate" title="Seductive Programming Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://aequasi.github.io/blog/archives/">
+	<link rel="canonical" href="http://aequasi.github.io/blog/2013/05/29/ip-based-htaccess-restriction/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -85,98 +85,66 @@
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><div itemscope itemtype="http://schema.org/Blog">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">IP Based Htaccess Restriction</h1>
+	<div class="entry-content" itemprop="articleBody"><p>A couple months ago, I was looking for a way to restrict a development site in such a way, that while people were at work (where we have a static IP), and then require an .htpasswd file for everyone outside.</p>
 
-	
+<p>Well, it was actually kind of simple. After youve got your .htpasswd file set up, just throw this inside your vhost</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="nb">AuthName</span> <span class="s2">&quot;Change This&quot;</span>
+</span><span class='line'><span class="nb">AuthUserFile</span> <span class="sx">/path/to/.htpasswd</span>
+</span><span class='line'><span class="nb">AuthType</span> Basic
+</span><span class='line'><span class="nb">Satisy</span> <span class="k">Any</span>
+</span><span class='line'><span class="nt">&lt;Limit</span> <span class="s">GET POST</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nb">Order</span> Deny,Allow
+</span><span class='line'>  <span class="nb">Deny</span> from <span class="k">all</span>
+</span><span class='line'>  <span class="nb">Allow</span> from <span class="m">12.34.56.789</span>
+</span><span class='line'>  <span class="nb">Require</span> valid-user
+</span><span class='line'><span class="nt">&lt;/Limit&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-	
-	
-	<section class="archives"><h1 class="year">2013</h1>
+<p>For your environment, you should change the <code>AuthName</code>, the <code>AuthUserFile</code>, the <code>Limit</code> (maybe, <code>GET</code> and <code>POST</code> might be enough), and the IP (<code>12.34.56.789</code>).</p>
 
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2013-05-29T07:01:00+00:00" itemprop="datePublished">May 29</time></span>
-		<br>
-		<span class="tags">
+<p>Change out the variables for what your environment requires, and you should be all set.</p>
+</div>
 
-
-	<a class='category' href='/blog/categories/apache/'>apache</a>, <a class='category' href='/blog/categories/htaccess/'>htaccess</a>
-
-
-</span>
-	    
-	    <span class="comments"><a href="/blog/2013/05/29/ip-based-htaccess-restriction/#disqus_thread">Comments</a></span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/29/ip-based-htaccess-restriction/">IP Based Htaccess Restriction</a></h1>
 </article>
 
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2013-05-24T15:26:00+00:00" itemprop="datePublished">May 24</time></span>
-		<br>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/php/'>PHP</a>
-
-
-</span>
-	    
-	    <span class="comments"><a href="/blog/2013/05/24/checking-named-class-inheritance/#disqus_thread">Comments</a></span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/24/checking-named-class-inheritance/">Checking Named Class Inheritance</a></h1>
-</article>
-
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2013-05-23T18:14:00+00:00" itemprop="datePublished">May 23</time></span>
-		<br>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/bash/'>bash</a>
-
-
-</span>
-	    
-	    <span class="comments"><a href="/blog/2013/05/23/beautiful-bash-prompt/#disqus_thread">Comments</a></span>
-	    
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/23/beautiful-bash-prompt/">Beautiful Bash Prompt</a></h1>
-</article>
-
 	
-
-
-<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<span class="date"><time datetime="2013-05-23T16:57:00+00:00" itemprop="datePublished">May 23</time></span>
-		<br>
-		<span class="tags">
-
-
-	<a class='category' href='/blog/categories/symfony2/'>Symfony2</a>
-
-
-</span>
-	    
-	    <span class="comments"><a href="/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/#disqus_thread">Comments</a></span>
-	    
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/">Symfony 2 and Memcached: A new Bundle</a></h1>
-</article>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
-  </section>
-</div></div>
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
 			</div>
 			<footer id="footer" class="inner"><p>
   Copyright &copy; 2013 - Aaron Scherer -
@@ -197,7 +165,10 @@ Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Sha
       var disqus_shortname = 'seductiveblog';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://aequasi.github.io/blog/2013/05/29/ip-based-htaccess-restriction/';
+        var disqus_url = 'http://aequasi.github.io/blog/2013/05/29/ip-based-htaccess-restriction/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
