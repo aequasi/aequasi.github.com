@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Symfony2 | Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/blog/categories/symfony2/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-05-29T06:58:33+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony 2 and Memcached: A new Bundle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/"/>
+    <updated>2013-05-23T16:57:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle</id>
+    <content type="html"><![CDATA[<hr />
+
+<h3>Introduction</h3>
+
+<p>So, I started work on a personal project of mine that I wanted to be able to use <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a>. The project is using the <a href="http://www.symfony.com"><code>Symfony2 PHP framework</code></a>, so I decided to look around a little bit to see if I could find a bundle that does what I needed.</p>
+
+<p>I stumbled upon the <a href="https://github.com/LeaseWeb/LswMemcacheBundle"><code>LswMemcacheBundle</code></a> at first, and it looked quite nice, having features like <code>Anti Dog Pile</code>, and <code>Profiling</code> attached to the <code>Web Profiler Toolbar</code>. I started looking at the code however, and it had a lot of bloat that I didnt want, some of the terminologies werent right, and it was missing a feature that I wanted. So I took it and decided to write my own.</p>
+
+<h3>The Result</h3>
+
+<p>So now, I give you the <a href="https://github.com/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a>! This takes a lot of the core logic, and features of the <a href="https://github.com/LeaseWeb/LswMemcacheBundle"><code>LswMemcacheBundle</code></a>, but removes the ability to use the <a href="http://www.php.net/manual/en/class.memcache.php"><code>Memcache</code></a> extension, and the compatibility with <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a> versions below <code>2.0</code>.</p>
+
+<h3>Features</h3>
+
+<ul>
+<li>Cluster Support
+
+<ul>
+<li>Can have mutlple clusters</li>
+</ul>
+</li>
+<li><a href="http://www.doctrine-project.org/"><code>Doctrine</code></a> Support
+
+<ul>
+<li>Supports all doctrine cache types (<code>metadata</code>, <code>query</code>, and <code>result</code>)</li>
+</ul>
+</li>
+<li>Session Support
+
+<ul>
+<li>Storing sessions in <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a> instead of <a href="http://www.php.net/manual/en/class.pdo.php"><code>PDO</code></a> or <code>File</code></li>
+</ul>
+</li>
+<li>Injectable Service
+
+<ul>
+<li>Can be used (as a service) wherever the <code>container</code> is.</li>
+</ul>
+</li>
+<li><code>Mysql</code> Key-Map support
+
+<ul>
+<li>When storing values in <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a>, a row is added to a mysql table, showing the key, the size of the value, how long the ttl is, and when it should expire.</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Installing</h3>
+
+<p>To install this bundle, check out the source <a href="https://github.com/aequasi/memcached-bundle">here</a>, and follow the instructions in the readme.</p>
+]]></content>
+  </entry>
+  
+</feed>

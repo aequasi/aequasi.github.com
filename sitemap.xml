@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/</loc>
+        <lastmod>2013-05-29T06:52:09+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://aequasi.github.io/blog/2013/05/23/beautiful-bash-prompt/</loc>
+        <lastmod>2013-05-29T06:52:09+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance/</loc>
+        <lastmod>2013-05-29T06:52:09+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://aequasi.github.io/blog/archives/</loc>
+        <lastmod>2013-05-29T06:52:09+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://aequasi.github.io/</loc>
+        <lastmod>2013-05-29T06:52:09+00:00</lastmod>
+    </url>
+    <url>
+        <loc>http://aequasi.github.io/robots.txt</loc>
+        <lastmod>2013-05-29T06:50:45+00:00</lastmod>
+    </url>
+</urlset>

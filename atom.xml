@@ -1,123 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Seductive Programming Blog</title>
-	<meta name="author" content="Aaron Scherer">
-
-	
-	<meta name="description" content="May 24th, 2013 PHP Comments Checking Named Class Inheritance I have been working on a new cache implementation for the Symfony2 framework, and I &hellip;">
-	
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="/rss.xml" rel="alternate" title="Seductive Programming Blog" type="application/atom+xml">
-	
-	<link rel="canonical" href="http://aequasi.github.io/">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-	<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-			<header id="header" class="inner"><div class="profilepic">	
-	<script src="/javascripts/md5.js"></script>
-	<script type="text/javascript">
-		$(function(){
-			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("aequasi@gmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
-		});
-	</script>
-</div>
-<hgroup>
-  <h1><a href="/">Seductive Programming Blog</a></h1>
-  
-    <h2>Beautiful and Elegant Solutions</h2>
-  
-</hgroup>
-
-<p class="subtitle">Beautiful and Elegant Solutions</p>
-<nav id="main-nav"><ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-</nav>
-<nav id="sub-nav">
-	<div class="social">
-		
-		
-		<a class="google" href="https://plus.google.com/108977350315028468742" rel="author" title="Google+">Google+</a>
-		
-		
-		<a class="twitter" href="http://twitter.com/aequasi" title="Twitter">Twitter</a>
-		
-		
-		<a class="github" href="https://github.com/aequasi" title="GitHub">GitHub</a>
-		
-		
-		
-		
-		
-		
-		
-		<a class="rss" href="/rss.xml" title="RSS">RSS</a>
-		
-	</div>
-</nav>
-</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			
-				
-			
-			<div class="mid-col-container">
-				<div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
+  <title><![CDATA[Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-05-29T06:58:33+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2013-05-24T15:26:00+00:00" data-updated="true" itemprop="datePublished">May 24<span>th</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/php/'>PHP</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2013/05/24/checking-named-class-inheritance/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/24/checking-named-class-inheritance/" itemprop="url">Checking Named Class Inheritance</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<hr />
+  <entry>
+    <title type="html"><![CDATA[Checking Named Class Inheritance]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance/"/>
+    <updated>2013-05-24T15:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance</id>
+    <content type="html"><![CDATA[<hr />
 
 <p>I have been working on a new cache implementation for the <code>Symfony2</code> framework, and I needed a way to check if a named class inherited a given interface , so i wrote the following:</p>
 
@@ -147,47 +48,19 @@
 
 
 <p>Hope this helps!</p>
-
-		
-		
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-05-23T18:14:00+00:00" data-updated="true" itemprop="datePublished">May 23<span>rd</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/bash/'>bash</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2013/05/23/beautiful-bash-prompt/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/23/beautiful-bash-prompt/" itemprop="url">Beautiful Bash Prompt</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<hr />
+  <entry>
+    <title type="html"><![CDATA[Beautiful Bash Prompt]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/23/beautiful-bash-prompt/"/>
+    <updated>2013-05-23T18:14:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/23/beautiful-bash-prompt</id>
+    <content type="html"><![CDATA[<hr />
 
 <p>I have been using linux for several years now, and my bash prompt has been evolving more and more, every time I use it, but I wanted to share with you guys today, what mine looks like, and how yours can look the same.</p>
 
-<p><img src="/images/posts/bash/bash-prompt.png"></p>
+<p><img src="http://aequasi.github.io/images/posts/bash/bash-prompt.png"></p>
 
 <ol>
 <li>First off, we need a file of color codes.</li>
@@ -214,43 +87,15 @@ Take the following, and place it at the bottom of your <code>~/.bashrc</code> fi
 <li>Then just reopen your prompt, and you&rsquo;ve got the new bash prompt!</li>
 </ol>
 
-
-		
-		
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2013-05-23T16:57:00+00:00" data-updated="true" itemprop="datePublished">May 23<span>rd</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/symfony2/'>Symfony2</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/" itemprop="url">Symfony 2 and Memcached: A New Bundle</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<hr />
+  <entry>
+    <title type="html"><![CDATA[Symfony 2 and Memcached: A new Bundle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/"/>
+    <updated>2013-05-23T16:57:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle</id>
+    <content type="html"><![CDATA[<hr />
 
 <h3>Introduction</h3>
 
@@ -301,66 +146,7 @@ Take the following, and place it at the bottom of your <code>~/.bashrc</code> fi
 <h3>Installing</h3>
 
 <p>To install this bundle, check out the source <a href="https://github.com/aequasi/memcached-bundle">here</a>, and follow the instructions in the readme.</p>
-
-		
-		
-	</div>
-
-</article>
-
-</div>
-<nav id="pagenavi">
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
-			</div>
-			<footer id="footer" class="inner"><p>
-  Copyright &copy; 2013 - Aaron Scherer -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
-			<script src="/javascripts/slash.js"></script>
-<script src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
-
-
-<script type="text/javascript">
-      var disqus_shortname = 'seductiveblog';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-41076836-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
-
-
-
-
-		</div>
-	</div>
-</body>
-</html>
+]]></content>
+  </entry>
+  
+</feed>

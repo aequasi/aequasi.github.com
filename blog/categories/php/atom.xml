@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PHP | Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-05-29T06:58:33+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Checking Named Class Inheritance]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance/"/>
+    <updated>2013-05-24T15:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance</id>
+    <content type="html"><![CDATA[<hr />
+
+<p>I have been working on a new cache implementation for the <code>Symfony2</code> framework, and I needed a way to check if a named class inherited a given interface , so i wrote the following:</p>
+
+<p>``` php
+&lt;?php
+function classInherits( $class, $inherit ) {</p>
+
+<pre><code>if( is_object( $class ) ) {
+    return ( $class instanceof $inherit );
+} elseif( is_string( $class ) ) {
+    return (bool) in_array( $inherit, class_implements( $class ) );
+}
+
+throw new Exception( "First value must be the name of a valid class, or an instance of one." );
+</code></pre>
+
+<p>}
+?>
+```</p>
+
+<p>Hope this helps!</p>
+]]></content>
+  </entry>
+  
+</feed>
