@@ -171,6 +171,7 @@ body {
 		opacity: 1;
 	}
 	.left-col {
+		overflow-y: scroll;
 		width: 23%;
 		position: fixed;
 		opacity: .3;
@@ -244,7 +245,7 @@ body {
 			margin: 0 0;
 	}
 }
-@media screen and (max-width: 700px){
+@media screen and (max-width: 1125px){
 	.container {
 		.credit-box {
 			display: none;
