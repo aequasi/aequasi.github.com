@@ -37,15 +37,8 @@ bash "info_in_etc_hosts" do
 end
 
 execute "add-bash-files" do
-    command "cp -r /vagrant/setup/bash /etc/; echo \"\nsource /etc/bash/bash.bashrc\n\" >> /etc/bash.bashrc"
-	only_if { `tail /etc/bash.bashrc | grep "source /etc/bash/bash.bashrc"` == "" }
-	action :run
-	ignore_failure true
-end
-
-execute "add-user-bash-files" do
-    command "echo \"\nsource /etc/bash/bash.bashrc\n\" >> /home/vagrant/.bashrc"
-	only_if { `tail /home/vagrant/.bashrc | grep "source /etc/bash/bash.bashrc"` == "" }
+    command "cat /vagrant/setup/bash/bash.bashrc >> /etc/bash.bashrc"
+	only_if { `cat /etc/bash.bashrc | grep "Setting Custom PS1"` == "" }
 	action :run
 	ignore_failure true
 end
