@@ -5,7 +5,7 @@ description: "Testing Services in Symfony2 can be difficult, especially when you
 tags: [ 'PHP', 'Symfony2', 'Testing' ]
 date: 2013-05-30 18:19
 comments: true
-categories: [ 'PHP' ]
+categories: [ 'PHP', 'Symfony2' ]
 ---
 
 Getting into testing at work with one of our new projects, and we need to be able to test our services. The biggest problem I had here, is that we have several services not in the default scope. After a little bit of digging and testing, I came up with this:
