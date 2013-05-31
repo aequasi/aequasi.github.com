@@ -1,6 +1,13 @@
 <ul class="main-navigation">
-  <li><a href="{{ root_url }}/">Home</a></li>
-  <li><a href="{{ root_url }}/blog/archives">Archives</a></li>
-  <li><a href="{{ root_url }}/blog/categories">Categories</a></li>
-  <li><a href="{{ root_url }}/about">About Me</a></li>
+	<li><a href="{{ root_url }}/">Home</a></li>
+	<li><a href="{{ root_url }}/blog/archives">Archives</a></li>
+	<li>
+		<a href="{{ root_url }}/blog/categories">Categories</a>
+		<ul>
+			{% for item in site.categories %}
+				<li><a href="/blog/categories/{{ item[0] }}/">{{ item[0] | lower }}</a> [ {{ item[1].size }} ]</li>
+			{% endfor %}
+		</ul>
+	</li>
+	<li><a href="{{ root_url }}/about">About Me</a></li>
 </ul>
