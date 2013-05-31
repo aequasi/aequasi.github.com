@@ -73,40 +73,12 @@ $header-height: 30px;
 			}
 		}
 		ul{
-			position: absolute;
-			top: 60px;
-			left: -15px;
-			z-index: 10;
-			white-space: nowrap;
-			background: $color-gray04;
-			border: 1px solid $color-gray03;
-			list-style: none;
-			display: none;
+			margin-lefT: 20px; 
 			@media screen and (max-width: 1040px){
 				top: 40px;
 			}
-			@include box-shadow(0 4px 8px rgba(0,0,0,0.1));
-			@include border-radius(0 0 5px 5px);
-			ul{
-				@include border-radius(0 5px 5px 5px);
-			}
 			li{
-				@include border-shadow($color-background, $color-gray03);
-				&:hover{
-					background: #d5d5d5;
-				}
-				&:first-of-type{
-					border-top: none;
-					ul{
-						@include border-radius(0 0 5px 5px);
-					}
-				}
-				&:last-of-type{
-					border-bottom: none;
-				}
 				>a{
-					display: block;
-					padding: 5px 15px;
 					&:after{
 						content: "\f054";
 						color: $color-gray02;
@@ -123,18 +95,9 @@ $header-height: 30px;
 					}
 				}
 			}
-			ul{
-				top: 0;
-				left: 100%;
-			}
 		}
 		li{
 			position: relative;
-			&:hover{
-				>ul{
-					display: block;
-				}
-			}
 		}
 	}
 	select{
