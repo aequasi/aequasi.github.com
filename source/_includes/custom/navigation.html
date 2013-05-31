@@ -5,7 +5,7 @@
 		<a href="{{ root_url }}/blog/categories">Categories</a>
 		<ul>
 			{% for item in site.categories %}
-				<li><a href="/blog/categories/{{ item[0] }}/">{{ item[0] | lower }}</a> [ {{ item[1].size }} ]</li>
+				<li><a href="/blog/categories/{{ item[0] | lower }}/">{{ item[0] | capitalize }}</a> [ {{ item[1].size }} ]</li>
 			{% endfor %}
 		</ul>
 	</li>
