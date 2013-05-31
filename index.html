@@ -7,7 +7,7 @@
 	<meta name="author" content="Aaron Scherer">
 
 	
-	<meta name="description" content="May 29th, 2013 apache, htaccess Comments IP Based Htaccess Restriction A couple months ago, I was looking for a way to restrict a development site &hellip;">
+	<meta name="description" content="May 30th, 2013 PHP Comments Symfony2 Testing: Testing Services in Request Scope Getting into testing at work with one of our new projects, and we &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,6 +101,250 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-30T18:19:00+00:00" data-updated="true" itemprop="datePublished">May 30<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/php/'>PHP</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/" itemprop="url">Symfony2 Testing: Testing Services in Request Scope</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>Getting into testing at work with one of our new projects, and we need to be able to test our services. The biggest problem I had here, is that we have several services not in the default scope. After a little bit of digging and testing, I came up with this:</p>
+
+<figure class='code'><figcaption><span>RequestServiceTest.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="sd">/**</span>
+</span><span class='line'><span class="sd"> * @author    Aaron Scherer &lt;aaron@undergroundelephant.com&gt;</span>
+</span><span class='line'><span class="sd"> * @date      2013</span>
+</span><span class='line'><span class="sd"> * @copyright Underground Elephant</span>
+</span><span class='line'><span class="sd"> */</span>
+</span><span class='line'><span class="k">namespace</span> <span class="nx">Ue\Bundle\RenderBundle\Tests\Service</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Bundle\FrameworkBundle\Test\WebTestCase</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Ue\Bundle\RenderBundle\Service\RequestService</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">/**</span>
+</span><span class='line'><span class="sd"> * RequestServiceTest Class</span>
+</span><span class='line'><span class="sd"> */</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">RequestServiceTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @var RequestService</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">private</span> <span class="nv">$requestService</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @var</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">private</span> <span class="nv">$container</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * {@inheritDoc}</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">setUp</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$container</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
+</span><span class='line'>      <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">enterScope</span><span class="p">(</span> <span class="s1">&#39;request&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span> <span class="s1">&#39;/t/1/&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$session</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getMock</span><span class="p">(</span> <span class="s1">&#39;Symfony\Component\HttpFoundation\Session\SessionInterface&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setSession</span><span class="p">(</span> <span class="nv">$session</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="nv">$request</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span> <span class="s1">&#39;ue.render.request&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * {@inheritDoc}</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">tearDown</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">leaveScope</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @return mixed</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">getContainer</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">static</span><span class="o">::</span><span class="nv">$kernel</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">createKernel</span><span class="p">(</span> <span class="p">);</span>
+</span><span class='line'>      <span class="k">static</span><span class="o">::</span><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">boot</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * Testing the constructor, and service call</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">testRequestService</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$expected</span> <span class="o">=</span> <span class="s1">&#39;Ue\Bundle\RenderBundle\Service\RequestService&#39;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertInstanceOf</span><span class="p">(</span>
+</span><span class='line'>          <span class="nv">$expected</span><span class="p">,</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span><span class="p">,</span>
+</span><span class='line'>          <span class="nb">sprintf</span><span class="p">(</span> <span class="s2">&quot;Expected %s for requestService. Got %s.&quot;</span><span class="p">,</span> <span class="nv">$expected</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span> <span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @depends testRequestService</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">testBuildRequest</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span><span class="o">-&gt;</span><span class="na">setTestId</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$expected</span> <span class="o">=</span> <span class="s1">&#39;Ue\Bundle\RenderBundle\Model\Request&#39;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$request</span>  <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span><span class="o">-&gt;</span><span class="na">buildRequest</span><span class="p">();</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertInstanceOf</span><span class="p">(</span>
+</span><span class='line'>          <span class="nv">$expected</span><span class="p">,</span>
+</span><span class='line'>          <span class="nv">$request</span><span class="p">,</span>
+</span><span class='line'>          <span class="nb">sprintf</span><span class="p">(</span> <span class="s2">&quot;Expected %s for response from buildRequest(). Got %s instead.&quot;</span><span class="p">,</span> <span class="nv">$expected</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span> <span class="nv">$request</span> <span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This creates the request (which you need to get the service), sets up the kernel, and because our <code>RequestService</code> is in the <code>request</code> scope, enters the <code>request</code> scope with <code>$container-&gt;enterScope( 'request' );</code>.</p>
+
+		
+		
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PHP | Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/blog/categories/php/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-05-30T05:50:10+00:00</updated>
+  <updated>2013-05-31T05:12:03+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/"/>
+    <updated>2013-05-30T18:19:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope</id>
+    <content type="html"><![CDATA[<p>Getting into testing at work with one of our new projects, and we need to be able to test our services. The biggest problem I had here, is that we have several services not in the default scope. After a little bit of digging and testing, I came up with this:</p>
+
+<p>``` php RequestServiceTest.php
+&lt;?php
+/<em>*
+ * @author    Aaron Scherer <a href="&#109;&#97;&#x69;&#108;&#x74;&#111;&#x3a;&#x61;&#97;&#x72;&#x6f;&#x6e;&#64;&#117;&#110;&#x64;&#x65;&#x72;&#x67;&#x72;&#x6f;&#x75;&#x6e;&#100;&#x65;&#108;&#x65;&#x70;&#104;&#97;&#x6e;&#x74;&#46;&#99;&#x6f;&#x6d;">&#97;&#x61;&#114;&#x6f;&#110;&#x40;&#117;&#110;&#100;&#101;&#114;&#x67;&#x72;&#x6f;&#117;&#110;&#100;&#x65;&#x6c;&#x65;&#x70;&#104;&#x61;&#110;&#116;&#46;&#x63;&#111;&#x6d;</a>
+ * @date      2013
+ * @copyright Underground Elephant
+ </em>/
+namespace Ue\Bundle\RenderBundle\Tests\Service;</p>
+
+<p>use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;</p>
+
+<p>use Ue\Bundle\RenderBundle\Service\RequestService;</p>
+
+<p>/<em>*
+ * RequestServiceTest Class
+ </em>/
+class RequestServiceTest extends WebTestCase
+{</p>
+
+<pre><code>/**
+ * @var RequestService
+ */
+private $requestService;
+
+/**
+ * @var
+ */
+private $container;
+
+/**
+ * {@inheritDoc}
+ */
+public function setUp()
+{
+    $container = $this-&gt;getContainer();
+    $container-&gt;enterScope( 'request' );
+    $request = Request::create( '/t/1/' );
+    $session = $this-&gt;getMock( 'Symfony\Component\HttpFoundation\Session\SessionInterface' );
+    $request-&gt;setSession( $session );
+    $this-&gt;getContainer()-&gt;set( 'request', $request );
+
+    $this-&gt;requestService = $this-&gt;container-&gt;get( 'ue.render.request' );
+}
+
+/**
+ * {@inheritDoc}
+ */
+public function tearDown()
+{
+    $this-&gt;getContainer()-&gt;leaveScope('request');
+}
+
+/**
+ * @return mixed
+ */
+public function getContainer()
+{
+    if ( $this-&gt;container ) {
+        return $this-&gt;container;
+    }
+
+    static::$kernel = static::createKernel( );
+    static::$kernel-&gt;boot();
+
+    $this-&gt;container = static::$kernel-&gt;getContainer();
+
+    return $this-&gt;container;
+}
+
+/**
+ * Testing the constructor, and service call
+ */
+public function testRequestService()
+{
+
+    $expected = 'Ue\Bundle\RenderBundle\Service\RequestService';
+    $this-&gt;assertInstanceOf(
+        $expected,
+        $this-&gt;requestService,
+        sprintf( "Expected %s for requestService. Got %s.", $expected, get_class( $this-&gt;requestService ) )
+    );
+}
+
+/**
+ * @depends testRequestService
+ */
+public function testBuildRequest()
+{
+    $this-&gt;requestService-&gt;setTestId( 1 );
+
+    $expected = 'Ue\Bundle\RenderBundle\Model\Request';
+    $request  = $this-&gt;requestService-&gt;buildRequest();
+    $this-&gt;assertInstanceOf(
+        $expected,
+        $request,
+        sprintf( "Expected %s for response from buildRequest(). Got %s instead.", $expected, get_class( $request ) )
+    );
+}
+</code></pre>
+
+<p>}
+?>
+```</p>
+
+<p>This creates the request (which you need to get the service), sets up the kernel, and because our <code>RequestService</code> is in the <code>request</code> scope, enters the <code>request</code> scope with <code>$container-&gt;enterScope( 'request' );</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Checking Named Class Inheritance]]></title>
