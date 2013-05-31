@@ -48,6 +48,17 @@ body {
 			li {
 				margin-left: 0px;
 				display: block;
+				ul {
+					margin-left: 20px;
+					display: block;
+					li {
+						margin-left: 0px; 
+						display: block;
+						a {
+							padding: 0;
+						}
+					};
+				}
 				a {
 					padding: 0px 0px;
 				}
