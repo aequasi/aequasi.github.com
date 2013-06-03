@@ -4,7 +4,7 @@
   <title><![CDATA[Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-06-03T04:41:55+00:00</updated>
+  <updated>2013-06-03T04:47:50+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -20,9 +20,9 @@
     <id>http://aequasi.github.io/blog/2013/06/03/guzzle</id>
     <content type="html"><![CDATA[<p>After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.</p>
 
-<p>I decided to go with the Guzzle HTTP client. Here are the slides:</p>
+<p>I decided to go with the Guzzle HTTP client. Here are the slides: <a href="http://guzzle.aaronscherer.me">http://guzzle.aaronscherer.me</a></p>
 
-<iframe src="http://guzzle.aaronscherer.me"></iframe>
+<iframe height="500" width="700" src="http://guzzle.aaronscherer.me"></iframe>
 
 ]]></content>
   </entry>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PHP | Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/blog/categories/php/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-06-03T04:41:55+00:00</updated>
+  <updated>2013-06-03T04:47:50+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -20,9 +20,9 @@
     <id>http://aequasi.github.io/blog/2013/06/03/guzzle</id>
     <content type="html"><![CDATA[<p>After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.</p>
 
-<p>I decided to go with the Guzzle HTTP client. Here are the slides:</p>
+<p>I decided to go with the Guzzle HTTP client. Here are the slides: <a href="http://guzzle.aaronscherer.me">http://guzzle.aaronscherer.me</a></p>
 
-<iframe src="http://guzzle.aaronscherer.me"></iframe>
+<iframe height="500" width="700" src="http://guzzle.aaronscherer.me"></iframe>
 
 ]]></content>
   </entry>
@@ -37,7 +37,7 @@
 <p>``` php RequestServiceTest.php
 &lt;?php
 /<em>*
- * @author    Aaron Scherer <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#97;&#97;&#114;&#111;&#x6e;&#64;&#x75;&#110;&#x64;&#101;&#x72;&#x67;&#114;&#111;&#117;&#110;&#100;&#x65;&#x6c;&#x65;&#112;&#x68;&#x61;&#110;&#116;&#x2e;&#99;&#111;&#x6d;">&#97;&#x61;&#x72;&#111;&#x6e;&#x40;&#117;&#110;&#x64;&#101;&#x72;&#x67;&#x72;&#x6f;&#x75;&#x6e;&#x64;&#101;&#108;&#x65;&#x70;&#x68;&#x61;&#110;&#116;&#x2e;&#x63;&#x6f;&#x6d;</a>
+ * @author    Aaron Scherer <a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#x61;&#97;&#x72;&#111;&#x6e;&#x40;&#117;&#110;&#100;&#x65;&#x72;&#103;&#x72;&#111;&#117;&#110;&#x64;&#x65;&#108;&#101;&#112;&#104;&#x61;&#110;&#116;&#x2e;&#99;&#111;&#109;">&#97;&#x61;&#x72;&#111;&#x6e;&#x40;&#117;&#110;&#x64;&#101;&#114;&#103;&#x72;&#x6f;&#x75;&#x6e;&#x64;&#x65;&#x6c;&#101;&#112;&#x68;&#x61;&#110;&#116;&#x2e;&#99;&#111;&#x6d;</a>
  * @date      2013
  * @copyright Underground Elephant
  </em>/
