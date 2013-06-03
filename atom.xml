@@ -4,7 +4,7 @@
   <title><![CDATA[Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-05-31T06:32:03+00:00</updated>
+  <updated>2013-06-03T04:38:14+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -12,6 +12,20 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Guzzle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/06/03/guzzle/"/>
+    <updated>2013-06-03T04:18:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/06/03/guzzle</id>
+    <content type="html"><![CDATA[<p>After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.</p>
+
+<p>I decided to go with the Guzzle HTTP client. Here are the slides:</p>
+
+<iframe src="http://guzzle.aaronscherer.me"></iframe>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>

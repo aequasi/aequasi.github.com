@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PHP | Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/blog/categories/php/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-05-31T06:32:03+00:00</updated>
+  <updated>2013-06-03T04:38:14+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -12,6 +12,20 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Guzzle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/06/03/guzzle/"/>
+    <updated>2013-06-03T04:18:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/06/03/guzzle</id>
+    <content type="html"><![CDATA[<p>After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.</p>
+
+<p>I decided to go with the Guzzle HTTP client. Here are the slides:</p>
+
+<iframe src="http://guzzle.aaronscherer.me"></iframe>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>
@@ -23,7 +37,7 @@
 <p>``` php RequestServiceTest.php
 &lt;?php
 /<em>*
- * @author    Aaron Scherer <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#x61;&#x61;&#114;&#111;&#x6e;&#64;&#117;&#110;&#100;&#101;&#114;&#x67;&#x72;&#111;&#117;&#110;&#100;&#x65;&#108;&#101;&#112;&#x68;&#x61;&#110;&#116;&#46;&#99;&#111;&#109;">&#x61;&#x61;&#x72;&#x6f;&#110;&#x40;&#117;&#110;&#100;&#101;&#114;&#103;&#x72;&#111;&#117;&#x6e;&#100;&#101;&#108;&#x65;&#112;&#104;&#x61;&#x6e;&#x74;&#46;&#x63;&#x6f;&#109;</a>
+ * @author    Aaron Scherer <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#x61;&#x61;&#114;&#x6f;&#110;&#x40;&#117;&#110;&#100;&#x65;&#x72;&#103;&#x72;&#111;&#x75;&#110;&#100;&#x65;&#108;&#101;&#x70;&#x68;&#97;&#x6e;&#116;&#46;&#x63;&#x6f;&#109;">&#x61;&#97;&#x72;&#x6f;&#110;&#x40;&#x75;&#x6e;&#x64;&#101;&#114;&#x67;&#x72;&#111;&#117;&#110;&#x64;&#x65;&#108;&#x65;&#x70;&#104;&#97;&#110;&#116;&#x2e;&#99;&#111;&#x6d;</a>
  * @date      2013
  * @copyright Underground Elephant
  </em>/

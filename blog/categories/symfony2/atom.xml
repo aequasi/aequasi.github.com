@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Symfony2 | Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/blog/categories/symfony2/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-05-31T06:32:03+00:00</updated>
+  <updated>2013-06-03T04:38:14+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -23,7 +23,7 @@
 <p>``` php RequestServiceTest.php
 &lt;?php
 /<em>*
- * @author    Aaron Scherer <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#x3a;&#x61;&#x61;&#114;&#x6f;&#x6e;&#x40;&#117;&#x6e;&#100;&#x65;&#114;&#x67;&#x72;&#111;&#117;&#x6e;&#100;&#x65;&#108;&#101;&#112;&#104;&#x61;&#110;&#x74;&#x2e;&#99;&#111;&#109;">&#97;&#x61;&#x72;&#x6f;&#x6e;&#64;&#117;&#x6e;&#x64;&#x65;&#x72;&#103;&#x72;&#111;&#117;&#110;&#x64;&#x65;&#108;&#101;&#x70;&#104;&#x61;&#x6e;&#x74;&#x2e;&#x63;&#x6f;&#109;</a>
+ * @author    Aaron Scherer <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#x61;&#97;&#x72;&#x6f;&#x6e;&#x40;&#117;&#x6e;&#100;&#x65;&#x72;&#x67;&#114;&#x6f;&#x75;&#x6e;&#100;&#101;&#x6c;&#101;&#112;&#104;&#x61;&#x6e;&#116;&#x2e;&#x63;&#x6f;&#109;">&#x61;&#97;&#114;&#111;&#110;&#x40;&#x75;&#x6e;&#100;&#x65;&#x72;&#x67;&#114;&#x6f;&#x75;&#x6e;&#100;&#101;&#x6c;&#101;&#x70;&#x68;&#97;&#x6e;&#116;&#x2e;&#x63;&#x6f;&#109;</a>
  * @date      2013
  * @copyright Underground Elephant
  </em>/
