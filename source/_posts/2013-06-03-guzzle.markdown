@@ -1,0 +1,14 @@
+---
+layout: post
+title: "Guzzle"
+date: 2013-06-03 04:18
+comments: true
+categories: [ 'PHP' ]
+tags: [ 'PHP', 'API', 'REST' ]
+---
+
+After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.
+
+I decided to go with the Guzzle HTTP client. Here are the slides:
+
+<iframe src="http://guzzle.aaronscherer.me"></iframe>

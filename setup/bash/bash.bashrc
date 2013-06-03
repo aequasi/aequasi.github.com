@@ -1,4 +1,3 @@
-ï»¿
 # Setting Custom PS1
 
 # Reset
@@ -75,7 +74,7 @@ On_ICyan='\e[0;106m'    # Cyan
 On_IWhite='\e[0;107m'   # White]']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']']'
 
 
-export PS1="\n\[$Blue\]+-[\[$Color_Off\]\[$Yellow\]\u\[$Color_Off\]\[$Cyan\]@\[$Color_Off\]\[$Yellow\]\h\[$Color_Off\]\[$Blue\]]-[\[$Color_Off\]\[$White\]\w\[$Color_Off\]\[$Red\]\T\[$Color_Off\]\[$Blue\]]\[$Color_Off\]\n\[$Blue\]+-\[$Red\][\[$Color_Off\]\[$White\]\$\[$Color_Off\]\[$Red\]]› \[$Color_Off\]"
+export PS1="\n\[$Blue\]+-[\[$Color_Off\]\[$Yellow\]\u\[$Color_Off\]\[$Cyan\]@\[$Color_Off\]\[$Yellow\]\h\[$Color_Off\]\[$Blue\]]-[\[$Color_Off\]\[$White\]\w\[$Color_Off\]\[$Red\]\T\[$Color_Off\]\[$Blue\]]\[$Color_Off\]\n\[$Blue\]+-\[$Red\][\[$Color_Off\]\[$White\]\$\[$Color_Off\]\[$Red\]] ~ \[$Color_Off\]"
 
 # some more ls aliases
 alias ls='ls --color=auto'
