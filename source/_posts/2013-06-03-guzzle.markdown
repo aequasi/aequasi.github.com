@@ -9,6 +9,6 @@ tags: [ 'PHP', 'API', 'REST' ]
 
 After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.
 
-I decided to go with the Guzzle HTTP client. Here are the slides:
+I decided to go with the Guzzle HTTP client. Here are the slides: <http://guzzle.aaronscherer.me>
 
-<iframe src="http://guzzle.aaronscherer.me"></iframe>
+<iframe height="500" width="700" src="http://guzzle.aaronscherer.me"></iframe>
