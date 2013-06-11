@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PHP | Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/blog/categories/php/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-06-03T04:47:50+00:00</updated>
+  <updated>2013-06-11T17:02:31+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Better Symfony Environments: Large Systems]]></title>
+    <link href="http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems/"/>
+    <updated>2013-06-10T23:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>At my work, we deal with a project where we have several development servers, a few staging servers, and hundreds of production servers.</p>
+
+<h2>The Issue</h2>
+
+<p>Having to deal with all four different environment types, without having environments hardcoded into the project is a little weird, and currently lacks much any real solutions, regarding symfony&rsquo;s documentation.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>In short, I implemented a class that we use in <code>app/console</code> and <code>web/app.php</code>, that reads an Apache environment variable.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Like I said above, I made an <code>Environment</code> class to check what environment the server belongs in. I made it a gist for you guys: <a href="https://gist.github.com/5753723.git.">https://gist.github.com/5753723.git.</a></p>
+
+<p>Basically, this environment class, can take an <code>ArgvInput</code> param as a constructor, and if it does, it assumes that it&rsquo;s CLI. If it&rsquo;s CLI, it will do the same CLI checks the symfony does by default for <code>$env</code>, and <code>$debug</code>. Cli and web both allow for specifying <code>symfony.environment</code> in php.ini as well, and the web piece allows you to specify an apache env variable (e.g. <code>SetEnv SYM_ENV stage</code>).</p>
+
+<p>Once you&rsquo;ve got that code, place it into <code>app/Environment.php</code> (you&rsquo;ll have to create it). From there, copy the logic I&rsquo;ve got for <code>app/consle</code> and <code>web/app.php</code> below.</p>
+
+<p>``` php console
+&lt;?php
+set_time_limit(0);</p>
+
+<p>require_once <strong>DIR</strong>.&lsquo;/bootstrap.php.cache&rsquo;;
+require_once <strong>DIR</strong>.&lsquo;/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> .&lsquo;/../app/Environment.php&rsquo;;</p>
+
+<p>use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;</p>
+
+<p>$input = new ArgvInput( );
+$env = new \Environment( $input );</p>
+
+<p>$kernel = new AppKernel( $env->getEnvironment(), $env->getDebug() );
+$application = new Application($kernel);
+$application->run( $input );
+```</p>
+
+<p>``` php app.php
+&lt;?php</p>
+
+<p>use Symfony\Component\HttpFoundation\Request;</p>
+
+<p>$loader = require_once <strong>DIR</strong>.&lsquo;/../app/bootstrap.php.cache&rsquo;;
+require_once <strong>DIR</strong>.&lsquo;/../app/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> .&lsquo;/../app/Environment.php&rsquo;;</p>
+
+<p>$env = new \Environment();</p>
+
+<p>$kernel = new AppKernel( $env->getEnvironment(), $env->getDebug() );
+$kernel->loadClassCache();
+Request::enableHttpMethodParameterOverride();
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Guzzle]]></title>
@@ -37,7 +103,7 @@
 <p>``` php RequestServiceTest.php
 &lt;?php
 /<em>*
- * @author    Aaron Scherer <a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#x61;&#97;&#x72;&#111;&#x6e;&#x40;&#117;&#110;&#100;&#x65;&#x72;&#103;&#x72;&#111;&#117;&#110;&#x64;&#x65;&#108;&#101;&#112;&#104;&#x61;&#110;&#116;&#x2e;&#99;&#111;&#109;">&#97;&#x61;&#x72;&#111;&#x6e;&#x40;&#117;&#110;&#x64;&#101;&#114;&#103;&#x72;&#x6f;&#x75;&#x6e;&#x64;&#x65;&#x6c;&#101;&#112;&#x68;&#x61;&#110;&#116;&#x2e;&#99;&#111;&#x6d;</a>
+ * @author    Aaron Scherer <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#97;&#x61;&#x72;&#x6f;&#110;&#64;&#117;&#110;&#100;&#101;&#114;&#103;&#114;&#x6f;&#117;&#x6e;&#100;&#101;&#x6c;&#x65;&#112;&#104;&#97;&#110;&#116;&#46;&#x63;&#111;&#x6d;">&#x61;&#97;&#x72;&#111;&#x6e;&#64;&#x75;&#x6e;&#x64;&#x65;&#x72;&#x67;&#x72;&#111;&#x75;&#110;&#100;&#x65;&#108;&#101;&#112;&#104;&#97;&#110;&#116;&#x2e;&#99;&#111;&#109;</a>
  * @date      2013
  * @copyright Underground Elephant
  </em>/

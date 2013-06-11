@@ -27,12 +27,18 @@
         <lastmod>2013-06-03T04:47:42+00:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems/
+        </loc>
+        <lastmod>2013-06-11T17:02:21+00:00</lastmod>
+    </url>
+    <url>
         <loc>http://aequasi.github.io/about/</loc>
         <lastmod>2013-05-31T05:35:49+00:00</lastmod>
     </url>
     <url>
         <loc>http://aequasi.github.io/blog/archives/</loc>
-        <lastmod>2013-06-03T04:47:42+00:00</lastmod>
+        <lastmod>2013-06-11T17:02:21+00:00</lastmod>
     </url>
     <url>
         <loc>http://aequasi.github.io/blog/categories/</loc>
@@ -40,7 +46,7 @@
     </url>
     <url>
         <loc>http://aequasi.github.io/</loc>
-        <lastmod>2013-06-03T04:47:42+00:00</lastmod>
+        <lastmod>2013-06-11T17:02:21+00:00</lastmod>
     </url>
     <url>
         <loc>http://aequasi.github.io/robots.txt</loc>

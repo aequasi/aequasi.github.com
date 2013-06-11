@@ -7,7 +7,7 @@
 	<meta name="author" content="Aaron Scherer">
 
 	
-	<meta name="description" content="Jun 3rd, 2013 PHP Comments Guzzle After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on &hellip;">
+	<meta name="description" content="Jun 10th, 2013 PHP, Symfony Comments Better Symfony Environments: Large Systems The Background At my work, we deal with a project where we have &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,11 +73,13 @@
 			
 				<li><a href="/blog/categories/bash/">Bash</a> [ 1 ]</li>
 			
-				<li><a href="/blog/categories/php/">Php</a> [ 3 ]</li>
+				<li><a href="/blog/categories/php/">Php</a> [ 4 ]</li>
 			
 				<li><a href="/blog/categories/apache/">Apache</a> [ 1 ]</li>
 			
 				<li><a href="/blog/categories/htaccess/">Htaccess</a> [ 1 ]</li>
+			
+				<li><a href="/blog/categories/symfony/">Symfony</a> [ 1 ]</li>
 			
 		</ul>
 	</li>
@@ -134,6 +136,137 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-10T23:26:00+00:00" data-updated="true" itemprop="datePublished">Jun 10<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/php/'>PHP</a>, <a class='category' href='/blog/categories/symfony/'>Symfony</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/06/10/better-symfony-environments-large-systems/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/06/10/better-symfony-environments-large-systems/" itemprop="url">Better Symfony Environments: Large Systems</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h2>The Background</h2>
+
+<p>At my work, we deal with a project where we have several development servers, a few staging servers, and hundreds of production servers.</p>
+
+<h2>The Issue</h2>
+
+<p>Having to deal with all four different environment types, without having environments hardcoded into the project is a little weird, and currently lacks much any real solutions, regarding symfony&rsquo;s documentation.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>In short, I implemented a class that we use in <code>app/console</code> and <code>web/app.php</code>, that reads an Apache environment variable.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Like I said above, I made an <code>Environment</code> class to check what environment the server belongs in. I made it a gist for you guys: <a href="https://gist.github.com/5753723.git.">https://gist.github.com/5753723.git.</a></p>
+
+<p>Basically, this environment class, can take an <code>ArgvInput</code> param as a constructor, and if it does, it assumes that it&rsquo;s CLI. If it&rsquo;s CLI, it will do the same CLI checks the symfony does by default for <code>$env</code>, and <code>$debug</code>. Cli and web both allow for specifying <code>symfony.environment</code> in php.ini as well, and the web piece allows you to specify an apache env variable (e.g. <code>SetEnv SYM_ENV stage</code>).</p>
+
+<p>Once you&rsquo;ve got that code, place it into <code>app/Environment.php</code> (you&rsquo;ll have to create it). From there, copy the logic I&rsquo;ve got for <code>app/consle</code> and <code>web/app.php</code> below.</p>
+
+<figure class='code'><figcaption><span>console</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="nb">set_time_limit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/bootstrap.php.cache&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/AppKernel.php&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span> <span class="o">.</span><span class="s1">&#39;/../app/Environment.php&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Bundle\FrameworkBundle\Console\Application</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\Console\Input\ArgvInput</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$input</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ArgvInput</span><span class="p">(</span> <span class="p">);</span>
+</span><span class='line'><span class="nv">$env</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Environment</span><span class="p">(</span> <span class="nv">$input</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$kernel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AppKernel</span><span class="p">(</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getEnvironment</span><span class="p">(),</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getDebug</span><span class="p">()</span> <span class="p">);</span>
+</span><span class='line'><span class="nv">$application</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">(</span><span class="nv">$kernel</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$application</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">(</span> <span class="nv">$input</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>app.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$loader</span> <span class="o">=</span> <span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../app/bootstrap.php.cache&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../app/AppKernel.php&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span> <span class="o">.</span><span class="s1">&#39;/../app/Environment.php&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$env</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Environment</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$kernel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AppKernel</span><span class="p">(</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getEnvironment</span><span class="p">(),</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getDebug</span><span class="p">()</span> <span class="p">);</span>
+</span><span class='line'><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">loadClassCache</span><span class="p">();</span>
+</span><span class='line'><span class="nx">Request</span><span class="o">::</span><span class="na">enableHttpMethodParameterOverride</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$response</span> <span class="o">=</span> <span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$response</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">terminate</span><span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+		
+		
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
