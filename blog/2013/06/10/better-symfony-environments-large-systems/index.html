@@ -146,7 +146,7 @@
 
 <h2>The Solution &ndash; Short</h2>
 
-<p>In short, I implemented a class that we use in <code>app/console</code> and <code>web/app.php</code>, that reads an Apache environment variable.</p>
+<p>In short, I implemented a class that we use in <code>app/console</code> and <code>web/app.php</code>, that reads an Apache environment variable or a <code>php.ini</code> variable with <code>get_cfg_var()</code>.</p>
 
 <h2>The Solution &ndash; Long</h2>
 
@@ -155,6 +155,15 @@
 <p>Basically, this environment class, can take an <code>ArgvInput</code> param as a constructor, and if it does, it assumes that it&rsquo;s CLI. If it&rsquo;s CLI, it will do the same CLI checks the symfony does by default for <code>$env</code>, and <code>$debug</code>. Cli and web both allow for specifying <code>symfony.environment</code> in php.ini as well, and the web piece allows you to specify an apache env variable (e.g. <code>SetEnv SYM_ENV stage</code>).</p>
 
 <p>Once you&rsquo;ve got that code, place it into <code>app/Environment.php</code> (you&rsquo;ll have to create it). From there, copy the logic I&rsquo;ve got for <code>app/consle</code> and <code>web/app.php</code> below.</p>
+
+<figure class='code'><figcaption><span>/etc/php5/conf.d/symfony.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[symfony]</span>
+</span><span class='line'><span class="na">symfony.environment</span> <span class="o">=</span> <span class="s">staging</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
 
 <figure class='code'><figcaption><span>console</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
