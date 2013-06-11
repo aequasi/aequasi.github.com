@@ -16,7 +16,7 @@ Having to deal with all four different environment types, without having environ
 
 ## The Solution - Short
 
-In short, I implemented a class that we use in `app/console` and `web/app.php`, that reads an Apache environment variable.
+In short, I implemented a class that we use in `app/console` and `web/app.php`, that reads an Apache environment variable or a `php.ini` variable with `get_cfg_var()`.
 
 ## The Solution - Long
 
@@ -25,6 +25,11 @@ Like I said above, I made an `Environment` class to check what environment the s
 Basically, this environment class, can take an `ArgvInput` param as a constructor, and if it does, it assumes that it's CLI. If it's CLI, it will do the same CLI checks the symfony does by default for `$env`, and `$debug`. Cli and web both allow for specifying `symfony.environment` in php.ini as well, and the web piece allows you to specify an apache env variable (e.g. `SetEnv SYM_ENV stage`).
 
 Once you've got that code, place it into `app/Environment.php` (you'll have to create it). From there, copy the logic I've got for `app/consle` and `web/app.php` below.
+
+``` ini /etc/php5/conf.d/symfony.ini
+[symfony]
+symfony.environment = staging
+```
 
 ``` php console
 <?php
