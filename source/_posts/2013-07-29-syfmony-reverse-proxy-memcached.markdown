@@ -3,8 +3,8 @@ layout: post
 title: "Symfony Reverse Proxy: Memcached"
 date: 2013-07-29 14:45
 comments: true
-categories: [ 'PHP', 'Symfony', 'Cache' ]
-tags: [ 'PHP', 'Symfony', 'Cache', 'Memcached' ]
+categories: [ 'PHP', 'Symfony2', 'Cache' ]
+tags: [ 'PHP', 'Symfony2', 'Cache', 'Memcached' ]
 ---
 
 ## The Background
