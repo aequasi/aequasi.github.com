@@ -26,24 +26,33 @@ Then, in `app/AppCache.php`, do the following:
 1. Require the `MemcachedStore` class at the top
 
 ```php
+<?php 
+
+require_once __DIR__ . '/AppKernel.php';
 require_once __DIR__ . '/MemcachedStore.php';
+
+// ...
+
 ````
 
 2. Overwrite the `createStore()` function
 
 ```php
-public function createStore()
-{
-    $servers = [
-        [ 'localhost', 11211 ]
-    ];
+<?php
+//...
 
-    return new MemcachedStore( [
-        'enabled'      => true,
-        'debug'        => true,
-        'persistentId' => serialize( $servers )
-    ], $servers );
-}
+    public function createStore()
+    {
+        $servers = [
+            [ 'localhost', 11211 ]
+        ];
+    
+        return new MemcachedStore( [
+            'enabled'      => true,
+            'debug'        => true,
+            'persistentId' => serialize( $servers )
+        ], $servers );
+    }
 ```
 
 3. ?!?$?
