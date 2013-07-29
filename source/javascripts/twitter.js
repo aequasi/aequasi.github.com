@@ -52,7 +52,7 @@
 		}
 
 		if ($(window).width() > 600){
-			var url = 'https://api.twitter.com/1/statuses/user_timeline/'+userid+'.json?count='+count+'&exclude_replies='+(reply ? '0' : '1')+'&trim_user=true&callback=?';
+			var url = 'https://api.twitter.com/1.1/statuses/user_timeline/'+userid+'.json?count='+count+'&exclude_replies='+(reply ? '0' : '1')+'&trim_user=true&callback=?';
 			banner.show();
 			$.getJSON(url, function(json){
 				var length = json.length,
