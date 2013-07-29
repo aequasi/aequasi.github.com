@@ -31,6 +31,8 @@ Then, in `app/AppCache.php`, do the following:
 require_once __DIR__ . '/AppKernel.php';
 require_once __DIR__ . '/MemcachedStore.php';
 
+class AppCache
+{
 // ...
 
 ````
@@ -40,7 +42,9 @@ require_once __DIR__ . '/MemcachedStore.php';
 ```php
 <?php
 //...
-
+class AppCache
+{
+    // ...
     public function createStore()
     {
         $servers = [
@@ -53,6 +57,8 @@ require_once __DIR__ . '/MemcachedStore.php';
             'persistentId' => serialize( $servers )
         ], $servers );
     }
+    // ...
+}
 ```
 
 3. ?!?$?
