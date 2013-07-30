@@ -23,7 +23,9 @@ Place this file in your `app` directory.
 
 Then, in `app/AppCache.php`, do the following:
 
-### First: Require the `MemcachedStore` class at the top
+### First:
+
+Require the `MemcachedStore` class at the top
 
 ```php
 <?php 
@@ -36,7 +38,9 @@ class AppCache
 	// ...
 ```
 
-### Second: Overwrite the `createStore()` function
+### Second:
+
+Overwrite the `createStore()` function
 
 ```php
 <?php
@@ -60,9 +64,13 @@ class AppCache
 }
 ```
 
-### Third: ?!?$?
+### Third:
 
-### Fourth: Profit.
+?!?$?
+
+### Fourth:
+
+Profit.
 
 
 If you want to create a service to get to this particular store, you would have to create a `$cache` variable in your `app/AppKernel`, and overwrite your `app/AppCache`'s `handle()` method to set the kernel's `$cache` variable before calling `parent::handle`.
