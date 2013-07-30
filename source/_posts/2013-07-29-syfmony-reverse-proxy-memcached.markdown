@@ -25,6 +25,7 @@ Then, in `app/AppCache.php`, do the following:
 
 1. Require the `MemcachedStore` class at the top
 
+	```php
 	<?php 
 	
 	require_once __DIR__ . '/AppKernel.php';
@@ -33,7 +34,7 @@ Then, in `app/AppCache.php`, do the following:
 	class AppCache
 	{
 		// ...
-	
+	```
 
 2. Overwrite the `createStore()` function
 
