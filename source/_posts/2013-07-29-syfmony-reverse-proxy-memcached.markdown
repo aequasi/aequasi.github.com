@@ -23,20 +23,20 @@ Place this file in your `app` directory.
 
 Then, in `app/AppCache.php`, do the following:
 
-1. Require the `MemcachedStore` class at the top
+### First: Require the `MemcachedStore` class at the top
 
-	```php
-	<?php 
-	
-	require_once __DIR__ . '/AppKernel.php';
-	require_once __DIR__ . '/MemcachedStore.php';
-	
-	class AppCache
-	{
-		// ...
-	```
+```php
+<?php 
 
-2. Overwrite the `createStore()` function
+require_once __DIR__ . '/AppKernel.php';
+require_once __DIR__ . '/MemcachedStore.php';
+
+class AppCache
+{
+	// ...
+```
+
+### Second: Overwrite the `createStore()` function
 
 ```php
 <?php
@@ -60,9 +60,9 @@ class AppCache
 }
 ```
 
-3. ?!?$?
+### Third: ?!?$?
 
-4. Profit.
+### Fourth: Profit.
 
 
 If you want to create a service to get to this particular store, you would have to create a `$cache` variable in your `app/AppKernel`, and overwrite your `app/AppCache`'s `handle()` method to set the kernel's `$cache` variable before calling `parent::handle`.
