@@ -13,6 +13,7 @@
 		<a href="#">Other Blogs</a>
 		<ul>
 			{% for item in site.blogs %}
+				<li>{{ item }}</li>
 				<li><a href="{{ item.url }}">{{ item.name }}</a></li>
 			{% endfor %}
 		<li>
