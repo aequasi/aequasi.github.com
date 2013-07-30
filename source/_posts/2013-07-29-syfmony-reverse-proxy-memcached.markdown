@@ -73,4 +73,6 @@ class AppCache
 Profit.
 
 
+#### Extra Stuff
+
 If you want to create a service to get to this particular store, you would have to create a `$cache` variable in your `app/AppKernel`, and overwrite your `app/AppCache`'s `handle()` method to set the kernel's `$cache` variable before calling `parent::handle`.
