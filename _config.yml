@@ -63,9 +63,9 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.
 # ----------------------- #
 
 blogs:
-  - [ "http://www.shocm.com/" , "Eric Shocm" ]
-  - [ "http://www.johncongdon.com/", "John Congdon" ]
-  - [ "http://www.sdphp.org/", "SDPHP Meetup" ]
+    [ "http://www.shocm.com/" , "Eric Shocm" ]
+    [ "http://www.johncongdon.com/", "John Congdon" ]
+    [ "http://www.sdphp.org/", "SDPHP Meetup" ]
 
 # Github repositories
 github_user: aequasi
