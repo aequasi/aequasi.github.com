@@ -127,7 +127,9 @@ prose:
         "source/_posts": |
             layout: post
             title: "Change Title"
-            comments: true
+            date: 2013-08-01 00:00:00
+            comments:
+              - true
             author:
               - Aaron Scherer
             categories:
