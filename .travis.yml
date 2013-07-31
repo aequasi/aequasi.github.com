@@ -5,8 +5,8 @@ language: ruby
 rvm:
 - 1.9.3
 before_script:
-- git config user.email "aequasi@gmail.com"
-- git config user.name "Aaron Scherer"
+- git config --global user.email "aequasi@gmail.com"
+- git config --global user.name "Aaron Scherer"
 - export REPO_URL="https://$GH_TOKEN@github.com/$GH_REPO.git"
 - rake setup_github_pages[$REPO_URL]
 script:
