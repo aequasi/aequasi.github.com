@@ -7,7 +7,7 @@
 	<meta name="author" content="Aaron Scherer">
 
 	
-	<meta name="description" content="Jul 29th, 2013 Cache, PHP, Symfony Comments Symfony Reverse Proxy: Memcached The Background Basically, we wanted to be able to use a simple Reverse &hellip;">
+	<meta name="description" content="Jul 31st, 2013 Comments Jquery: Roll to Next Input I was looking for a way to be able to have an input, that when you change, would roll to the next &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -139,9 +139,85 @@
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
 
-	
+		
+		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
 
-	
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-31T05:41:00+00:00" data-updated="true" itemprop="datePublished">Jul 31<span>st</span>, 2013</time></div>
+		<div class="tags">
+
+</div>
+		
+			<span class="comments"><a href="/blog/2013/07/31/jquery-roll-to-next-input/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/07/31/jquery-roll-to-next-input/" itemprop="url">Jquery: Roll to Next Input</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>I was looking for a way to be able to have an input, that when you change, would roll to the next input. The project I&rsquo;m working on has a page based system, so each page has its own fieldset. When the last field is completed, I wanted it to automatically roll to the next page. I also wanted functionality for zip code, and phone number fields, that would roll to the next input after 5 digits on zip, or roll to the next piece of the phone number field.</p>
+
+<h3>The Solution</h3>
+
+<p>Starting off with the binds</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span> <span class="nb">document</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;keyup click&#39;</span><span class="p">,</span> <span class="s1">&#39;:input.rollToNext&#39;</span><span class="p">,</span> <span class="nx">rollToNext</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, the actual function</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">rollToNext</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">switch</span><span class="p">(</span> <span class="nx">event</span><span class="p">.</span><span class="nx">type</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">case</span> <span class="s1">&#39;click&#39;</span><span class="o">:</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">$</span><span class="p">(</span> <span class="k">this</span> <span class="p">).</span><span class="nx">is</span><span class="p">(</span> <span class="s1">&#39;select&#39;</span> <span class="p">)</span> <span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>      <span class="k">case</span> <span class="s1">&#39;keyup&#39;</span><span class="o">:</span>
+</span><span class='line'>          <span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">?</span> <span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">which</span><span class="p">;</span>
+</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="nx">$</span><span class="p">(</span> <span class="k">this</span> <span class="p">).</span><span class="nx">is</span><span class="p">(</span> <span class="s1">&#39;select&#39;</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">code</span> <span class="o">!=</span> <span class="mi">13</span> <span class="o">&amp;&amp;</span> <span class="nx">code</span> <span class="o">!=</span> <span class="mi">9</span> <span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// If the function has made it here, we should run the roll to next logic</span>
+</span><span class='line'>  <span class="c1">// Don&#39;t have the code in here yet, give me some time to find it again.</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>End</h2>
+
+<p>Voila, your rollToNext function is there. All you need to do, is pull a <code>rollToNext</code> class on your input</p>
+
+		
+		
+	</div>
+
+</article>
+
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -223,9 +299,7 @@
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -365,9 +439,7 @@
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -409,9 +481,7 @@
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -655,9 +725,7 @@
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -723,9 +791,7 @@
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -791,9 +857,7 @@
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -860,9 +924,7 @@ Take the following, and place it at the bottom of your <code>~/.bashrc</code> fi
 	</div>
 
 </article>
-	
 
-	
 		
 		<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 	<div class="meta">
@@ -949,7 +1011,6 @@ Take the following, and place it at the bottom of your <code>~/.bashrc</code> fi
 	</div>
 
 </article>
-	
 
 </div>
 <nav id="pagenavi">
