@@ -3,8 +3,8 @@ layout: post
 title: "Symfony Reverse Proxy: Memcached"
 date: 2013-07-29 14:45
 comments: true
-categories: [ 'PHP', 'Symfony', 'Cache' ]
-tags: [ 'PHP', 'Symfony', 'Cache', 'Memcached' ]
+categories: [ 'PHP', 'Symfony2', 'Cache' ]
+tags: [ 'PHP', 'Symfony2', 'Cache', 'Memcached' ]
 ---
 
 ## The Background
@@ -23,32 +23,56 @@ Place this file in your `app` directory.
 
 Then, in `app/AppCache.php`, do the following:
 
-1. Require the `MemcachedStore` class at the top
+### First:
 
-    ```php
-    require_once __DIR__ . '/MemcachedStore.php';
-    ````
+Require the `MemcachedStore` class at the top
 
-2. Overwrite the `createStore()` function
+```php
+<?php 
 
-    ```php
+require_once __DIR__ . '/AppKernel.php';
+require_once __DIR__ . '/MemcachedStore.php';
+
+class AppCache
+{
+	// ...
+```
+
+### Second:
+
+Overwrite the `createStore()` function
+
+```php
+<?php
+//...
+class AppCache
+{
+    // ...
     public function createStore()
     {
         $servers = [
             [ 'localhost', 11211 ]
         ];
-
+    
         return new MemcachedStore( [
             'enabled'      => true,
             'debug'        => true,
             'persistentId' => serialize( $servers )
         ], $servers );
     }
-    ```
+    // ...
+}
+```
 
-3. ?!?$?
+### Third:
 
-4. Profit.
+?!?$?
 
+### Fourth:
+
+Profit.
+
+
+#### Extra Stuff
 
 If you want to create a service to get to this particular store, you would have to create a `$cache` variable in your `app/AppKernel`, and overwrite your `app/AppCache`'s `handle()` method to set the kernel's `$cache` variable before calling `parent::handle`.
