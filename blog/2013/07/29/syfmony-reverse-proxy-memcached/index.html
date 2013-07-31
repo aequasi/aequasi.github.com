@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Guzzle - Seductive Programming Blog</title>
+	<title>Symfony Reverse Proxy: Memcached - Seductive Programming Blog</title>
 	<meta name="author" content="Aaron Scherer">
 
 	
-	<meta name="description" content="Guzzle After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that &hellip;">
+	<meta name="description" content="Symfony Reverse Proxy: Memcached The Background Basically, we wanted to be able to use a simple Reverse Proxy (not Varnish, not Squid), that used a &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,7 +17,7 @@
 
 	<link href="/rss.xml" rel="alternate" title="Seductive Programming Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://aequasi.github.io/blog/2013/06/03/guzzle/">
+	<link rel="canonical" href="http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/">
 	<link href="/favicon.ico" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -137,13 +137,53 @@
 			
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<h1 class="title" itemprop="name">Guzzle</h1>
-	<div class="entry-content" itemprop="articleBody"><p>After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.</p>
+	<h1 class="title" itemprop="name">Symfony Reverse Proxy: Memcached</h1>
+	<div class="entry-content" itemprop="articleBody"><h2>The Background</h2>
 
-<p>I decided to go with the Guzzle HTTP client. Here are the slides: <a href="http://guzzle.aaronscherer.me">http://guzzle.aaronscherer.me</a></p>
+<p>Basically, we wanted to be able to use a simple Reverse Proxy (not Varnish, not Squid), that used a Memcache installation, instead of the file system.</p>
 
-<iframe height="500" width="700" src="http://guzzle.aaronscherer.me"></iframe>
+<h2>The Solution &ndash; Short</h2>
 
+<p>I wrote a new <code>MemcachedStore</code> class that <code>AppCache</code> now uses instead. The biggest downside is, the configs for the servers isnt used by the AppCache piece.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Heres the <a href="https://gist.github.com/aequasi/6108241">MemcachedStore class</a>. Right now, its set up to use my <a href="https://packagist.org/packages/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a> symfony bundle at the moment, but it wouldnt be that hard to change to just using <code>Memcached</code> or <code>Memcache</code>.</p>
+
+<p>Place this file in your <code>app</code> directory.</p>
+
+<p>Then, in <code>app/AppCache.php</code>, do the following:</p>
+
+<ol>
+<li><p>Require the <code>MemcachedStore</code> class at the top</p>
+
+<p> &#8220;`php
+ require_once <strong>DIR</strong> . &lsquo;/MemcachedStore.php&rsquo;;
+ &#8220;&#8220;</p></li>
+<li><p>Overwrite the <code>createStore()</code> function</p>
+
+<p> &#8220;`php
+ public function createStore()
+ {
+     $servers = [
+         [ &lsquo;localhost&rsquo;, 11211 ]
+     ];</p>
+
+<pre><code> return new MemcachedStore( [
+     'enabled'      =&gt; true,
+     'debug'        =&gt; true,
+     'persistentId' =&gt; serialize( $servers )
+ ], $servers );
+</code></pre>
+
+<p> }
+ &#8220;`</p></li>
+<li><p>?!?$?</p></li>
+<li><p>Profit.</p></li>
+</ol>
+
+
+<p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
 </div>
 
 </article>
@@ -193,8 +233,8 @@ Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Sha
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://aequasi.github.io/blog/2013/06/03/guzzle/';
-        var disqus_url = 'http://aequasi.github.io/blog/2013/06/03/guzzle/';
+        var disqus_identifier = 'http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/';
+        var disqus_url = 'http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/';
         var disqus_script = 'embed.js';
       
     (function () {
