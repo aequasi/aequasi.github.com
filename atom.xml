@@ -4,7 +4,7 @@
   <title><![CDATA[Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-07-31T06:31:02+00:00</updated>
+  <updated>2013-07-31T06:34:24+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -13,61 +13,9 @@
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
-  <entry>
-    <title type="html"><![CDATA[Jquery: Roll to Next Input]]></title>
-    <link href="http://aequasi.github.io/blog/2013/07/31/jquery-roll-to-next-input/"/>
-    <updated>2013-07-31T05:41:00+00:00</updated>
-    <id>http://aequasi.github.io/blog/2013/07/31/jquery-roll-to-next-input</id>
-    <content type="html"><![CDATA[<p>I was looking for a way to be able to have an input, that when you change, would roll to the next input. The project I&rsquo;m working on has a page based system, so each page has its own fieldset. When the last field is completed, I wanted it to automatically roll to the next page. I also wanted functionality for zip code, and phone number fields, that would roll to the next input after 5 digits on zip, or roll to the next piece of the phone number field.</p>
-
-<h3>The Solution</h3>
-
-<p>Starting off with the binds</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">$</span><span class="p">(</span> <span class="nb">document</span> <span class="p">).</span><span class="nx">on</span><span class="p">(</span> <span class="s1">&#39;keyup click&#39;</span><span class="p">,</span> <span class="s1">&#39;:input.rollToNext&#39;</span><span class="p">,</span> <span class="nx">rollToNext</span> <span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then, the actual function</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="kd">function</span> <span class="nx">rollToNext</span><span class="p">(</span> <span class="nx">event</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">switch</span><span class="p">(</span> <span class="nx">event</span><span class="p">.</span><span class="nx">type</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">case</span> <span class="s1">&#39;click&#39;</span><span class="o">:</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">$</span><span class="p">(</span> <span class="k">this</span> <span class="p">).</span><span class="nx">is</span><span class="p">(</span> <span class="s1">&#39;select&#39;</span> <span class="p">)</span> <span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">case</span> <span class="s1">&#39;keyup&#39;</span><span class="o">:</span>
-</span><span class='line'>          <span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">?</span> <span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">:</span> <span class="nx">event</span><span class="p">.</span><span class="nx">which</span><span class="p">;</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="nx">$</span><span class="p">(</span> <span class="k">this</span> <span class="p">).</span><span class="nx">is</span><span class="p">(</span> <span class="s1">&#39;select&#39;</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">code</span> <span class="o">!=</span> <span class="mi">13</span> <span class="o">&amp;&amp;</span> <span class="nx">code</span> <span class="o">!=</span> <span class="mi">9</span> <span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1">// If the function has made it here, we should run the roll to next logic</span>
-</span><span class='line'>  <span class="c1">// Don&#39;t have the code in here yet, give me some time to find it again.</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>End</h2>
-
-<p>Voila, your rollToNext function is there. All you need to do, is pull a <code>rollToNext</code> class on your input</p>
-]]></content>
-  </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Symfony Reverse Proxy: Memcached]]></title>
     <link href="http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/"/>
@@ -170,7 +118,9 @@
 <p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Better Symfony Environments: Large Systems]]></title>
     <link href="http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems/"/>
@@ -282,7 +232,9 @@
 
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Guzzle]]></title>
     <link href="http://aequasi.github.io/blog/2013/06/03/guzzle/"/>
@@ -296,7 +248,9 @@
 
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>
     <link href="http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/"/>
@@ -512,7 +466,9 @@
 <p>This creates the request (which you need to get the service), sets up the kernel, and because our <code>RequestService</code> is in the <code>request</code> scope, enters the <code>request</code> scope with <code>$container-&gt;enterScope( 'request' );</code>.</p>
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[IP Based Htaccess Restriction]]></title>
     <link href="http://aequasi.github.io/blog/2013/05/29/ip-based-htaccess-restriction/"/>
@@ -550,7 +506,9 @@
 <p>Change out the variables for what your environment requires, and you should be all set.</p>
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Checking Named Class Inheritance]]></title>
     <link href="http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance/"/>
@@ -588,7 +546,9 @@
 <p>Hope this helps!</p>
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Beautiful Bash Prompt]]></title>
     <link href="http://aequasi.github.io/blog/2013/05/23/beautiful-bash-prompt/"/>
@@ -627,7 +587,9 @@ Take the following, and place it at the bottom of your <code>~/.bashrc</code> fi
 
 ]]></content>
   </entry>
+	
   
+	
   <entry>
     <title type="html"><![CDATA[Symfony 2 and Memcached: A new Bundle]]></title>
     <link href="http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/"/>
@@ -686,5 +648,6 @@ Take the following, and place it at the bottom of your <code>~/.bashrc</code> fi
 <p>To install this bundle, check out the source <a href="https://github.com/aequasi/memcached-bundle">here</a>, and follow the instructions in the readme.</p>
 ]]></content>
   </entry>
+	
   
 </feed>
