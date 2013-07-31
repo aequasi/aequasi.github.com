@@ -2,9 +2,16 @@
 layout: post
 title: "Jquery: Roll to Next Input"
 date: "2013-07-31 05:41"
-comments: true
-categories: null
-published: true
+comments: 
+  - true
+  - "true"
+categories: 
+  - null
+  - All Posts
+published: 
+  - true
+  - "true"
+author: Aaron Scherer
 ---
 
 I was looking for a way to be able to have an input, that when you change, would roll to the next input. The project I'm working on has a page based system, so each page has its own fieldset. When the last field is completed, I wanted it to automatically roll to the next page. I also wanted functionality for zip code, and phone number fields, that would roll to the next input after 5 digits on zip, or roll to the next piece of the phone number field.
@@ -63,4 +70,4 @@ function rollToNext( event ) {
 
 ## End
 
-Voila, your `rollToNext` function is there. All you need to do, is pull a `rollToNext` class on your input
+Voila, your `rollToNext` function is there. All you need to do, is pull a `rollToNext` class on your input. If you need any help implementing this, hit me up in the comments.
