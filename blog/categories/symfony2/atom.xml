@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Symfony2 | Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/blog/categories/symfony2/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-07-31T06:34:24+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony Reverse Proxy: Memcached]]></title>
+    <link href="http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/"/>
+    <updated>2013-07-29T14:45:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>Basically, we wanted to be able to use a simple Reverse Proxy (not Varnish, not Squid), that used a Memcache installation, instead of the file system.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>I wrote a new <code>MemcachedStore</code> class that <code>AppCache</code> now uses instead. The biggest downside is, the configs for the servers isnt used by the AppCache piece.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Heres the <a href="https://gist.github.com/aequasi/6108241">MemcachedStore class</a>. Right now, its set up to use my <a href="https://packagist.org/packages/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a> symfony bundle at the moment, but it wouldnt be that hard to change to just using <code>Memcached</code> or <code>Memcache</code>.</p>
+
+<p>Place this file in your <code>app</code> directory.</p>
+
+<p>Then, in <code>app/AppCache.php</code>, do the following:</p>
+
+<h3>First:</h3>
+
+<p>Require the <code>MemcachedStore</code> class at the top</p>
+
+<p>```php
+&lt;?php</p>
+
+<p>require_once <strong>DIR</strong> . &lsquo;/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> . &lsquo;/MemcachedStore.php&rsquo;;</p>
+
+<p>class AppCache
+{</p>
+
+<pre><code>// ...
+</code></pre>
+
+<p>```</p>
+
+<h3>Second:</h3>
+
+<p>Overwrite the <code>createStore()</code> function</p>
+
+<p>```php
+&lt;?php
+//&hellip;
+class AppCache
+{</p>
+
+<pre><code>// ...
+public function createStore()
+{
+    $servers = [
+        [ 'localhost', 11211 ]
+    ];
+
+    return new MemcachedStore( [
+        'enabled'      =&gt; true,
+        'debug'        =&gt; true,
+        'persistentId' =&gt; serialize( $servers )
+    ], $servers );
+}
+// ...
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>Third:</h3>
+
+<p>?!?$?</p>
+
+<h3>Fourth:</h3>
+
+<p>Profit.</p>
+
+<h4>Extra Stuff</h4>
+
+<p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/"/>
+    <updated>2013-05-30T18:19:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope</id>
+    <content type="html"><![CDATA[<p>Getting into testing at work with one of our new projects, and we need to be able to test our services. The biggest problem I had here, is that we have several services not in the default scope. After a little bit of digging and testing, I came up with this:</p>
+
+<p>``` php RequestServiceTest.php
+&lt;?php
+/<em>*
+ * @author    Aaron Scherer <a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#97;&#x61;&#x72;&#111;&#110;&#x40;&#117;&#x6e;&#x64;&#x65;&#114;&#103;&#114;&#x6f;&#117;&#x6e;&#100;&#x65;&#108;&#101;&#x70;&#x68;&#97;&#110;&#116;&#46;&#99;&#111;&#109;">&#97;&#x61;&#114;&#x6f;&#110;&#x40;&#x75;&#x6e;&#x64;&#101;&#x72;&#103;&#x72;&#x6f;&#117;&#110;&#x64;&#x65;&#108;&#101;&#x70;&#x68;&#x61;&#110;&#x74;&#46;&#99;&#x6f;&#109;</a>
+ * @date      2013
+ * @copyright Underground Elephant
+ </em>/
+namespace Ue\Bundle\RenderBundle\Tests\Service;</p>
+
+<p>use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;</p>
+
+<p>use Ue\Bundle\RenderBundle\Service\RequestService;</p>
+
+<p>/<em>*
+ * RequestServiceTest Class
+ </em>/
+class RequestServiceTest extends WebTestCase
+{</p>
+
+<pre><code>/**
+ * @var RequestService
+ */
+private $requestService;
+
+/**
+ * @var
+ */
+private $container;
+
+/**
+ * {@inheritDoc}
+ */
+public function setUp()
+{
+    $container = $this-&gt;getContainer();
+    $container-&gt;enterScope( 'request' );
+    $request = Request::create( '/t/1/' );
+    $session = $this-&gt;getMock( 'Symfony\Component\HttpFoundation\Session\SessionInterface' );
+    $request-&gt;setSession( $session );
+    $this-&gt;getContainer()-&gt;set( 'request', $request );
+
+    $this-&gt;requestService = $this-&gt;container-&gt;get( 'ue.render.request' );
+}
+
+/**
+ * {@inheritDoc}
+ */
+public function tearDown()
+{
+    $this-&gt;getContainer()-&gt;leaveScope('request');
+}
+
+/**
+ * @return mixed
+ */
+public function getContainer()
+{
+    if ( $this-&gt;container ) {
+        return $this-&gt;container;
+    }
+
+    static::$kernel = static::createKernel( );
+    static::$kernel-&gt;boot();
+
+    $this-&gt;container = static::$kernel-&gt;getContainer();
+
+    return $this-&gt;container;
+}
+
+/**
+ * Testing the constructor, and service call
+ */
+public function testRequestService()
+{
+
+    $expected = 'Ue\Bundle\RenderBundle\Service\RequestService';
+    $this-&gt;assertInstanceOf(
+        $expected,
+        $this-&gt;requestService,
+        sprintf( "Expected %s for requestService. Got %s.", $expected, get_class( $this-&gt;requestService ) )
+    );
+}
+
+/**
+ * @depends testRequestService
+ */
+public function testBuildRequest()
+{
+    $this-&gt;requestService-&gt;setTestId( 1 );
+
+    $expected = 'Ue\Bundle\RenderBundle\Model\Request';
+    $request  = $this-&gt;requestService-&gt;buildRequest();
+    $this-&gt;assertInstanceOf(
+        $expected,
+        $request,
+        sprintf( "Expected %s for response from buildRequest(). Got %s instead.", $expected, get_class( $request ) )
+    );
+}
+</code></pre>
+
+<p>}
+?>
+```</p>
+
+<p>This creates the request (which you need to get the service), sets up the kernel, and because our <code>RequestService</code> is in the <code>request</code> scope, enters the <code>request</code> scope with <code>$container-&gt;enterScope( 'request' );</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony 2 and Memcached: A new Bundle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/"/>
+    <updated>2013-05-23T16:57:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle</id>
+    <content type="html"><![CDATA[<hr />
+
+<h3>Introduction</h3>
+
+<p>So, I started work on a personal project of mine that I wanted to be able to use <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a>. The project is using the <a href="http://www.symfony.com"><code>Symfony2 PHP framework</code></a>, so I decided to look around a little bit to see if I could find a bundle that does what I needed.</p>
+
+<p>I stumbled upon the <a href="https://github.com/LeaseWeb/LswMemcacheBundle"><code>LswMemcacheBundle</code></a> at first, and it looked quite nice, having features like <code>Anti Dog Pile</code>, and <code>Profiling</code> attached to the <code>Web Profiler Toolbar</code>. I started looking at the code however, and it had a lot of bloat that I didnt want, some of the terminologies werent right, and it was missing a feature that I wanted. So I took it and decided to write my own.</p>
+
+<h3>The Result</h3>
+
+<p>So now, I give you the <a href="https://github.com/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a>! This takes a lot of the core logic, and features of the <a href="https://github.com/LeaseWeb/LswMemcacheBundle"><code>LswMemcacheBundle</code></a>, but removes the ability to use the <a href="http://www.php.net/manual/en/class.memcache.php"><code>Memcache</code></a> extension, and the compatibility with <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a> versions below <code>2.0</code>.</p>
+
+<h3>Features</h3>
+
+<ul>
+<li>Cluster Support
+
+<ul>
+<li>Can have mutlple clusters</li>
+</ul>
+</li>
+<li><a href="http://www.doctrine-project.org/"><code>Doctrine</code></a> Support
+
+<ul>
+<li>Supports all doctrine cache types (<code>metadata</code>, <code>query</code>, and <code>result</code>)</li>
+</ul>
+</li>
+<li>Session Support
+
+<ul>
+<li>Storing sessions in <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a> instead of <a href="http://www.php.net/manual/en/class.pdo.php"><code>PDO</code></a> or <code>File</code></li>
+</ul>
+</li>
+<li>Injectable Service
+
+<ul>
+<li>Can be used (as a service) wherever the <code>container</code> is.</li>
+</ul>
+</li>
+<li><code>Mysql</code> Key-Map support
+
+<ul>
+<li>When storing values in <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a>, a row is added to a mysql table, showing the key, the size of the value, how long the ttl is, and when it should expire.</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Installing</h3>
+
+<p>To install this bundle, check out the source <a href="https://github.com/aequasi/memcached-bundle">here</a>, and follow the instructions in the readme.</p>
+]]></content>
+  </entry>
+  
+</feed>

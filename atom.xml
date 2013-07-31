@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-07-31T06:34:24+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Symfony Reverse Proxy: Memcached]]></title>
+    <link href="http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/"/>
+    <updated>2013-07-29T14:45:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>Basically, we wanted to be able to use a simple Reverse Proxy (not Varnish, not Squid), that used a Memcache installation, instead of the file system.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>I wrote a new <code>MemcachedStore</code> class that <code>AppCache</code> now uses instead. The biggest downside is, the configs for the servers isnt used by the AppCache piece.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Heres the <a href="https://gist.github.com/aequasi/6108241">MemcachedStore class</a>. Right now, its set up to use my <a href="https://packagist.org/packages/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a> symfony bundle at the moment, but it wouldnt be that hard to change to just using <code>Memcached</code> or <code>Memcache</code>.</p>
+
+<p>Place this file in your <code>app</code> directory.</p>
+
+<p>Then, in <code>app/AppCache.php</code>, do the following:</p>
+
+<h3>First:</h3>
+
+<p>Require the <code>MemcachedStore</code> class at the top</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/AppKernel.php&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/MemcachedStore.php&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">AppCache</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="c1">// ...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Second:</h3>
+
+<p>Overwrite the <code>createStore()</code> function</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="c1">//...</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">AppCache</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="c1">// ...</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">createStore</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$servers</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class='line'>            <span class="p">[</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">11211</span> <span class="p">]</span>
+</span><span class='line'>        <span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nx">MemcachedStore</span><span class="p">(</span> <span class="p">[</span>
+</span><span class='line'>            <span class="s1">&#39;enabled&#39;</span>      <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span class='line'>            <span class="s1">&#39;debug&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span class='line'>            <span class="s1">&#39;persistentId&#39;</span> <span class="o">=&gt;</span> <span class="nb">serialize</span><span class="p">(</span> <span class="nv">$servers</span> <span class="p">)</span>
+</span><span class='line'>        <span class="p">],</span> <span class="nv">$servers</span> <span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">// ...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Third:</h3>
+
+<p>?!?$?</p>
+
+<h3>Fourth:</h3>
+
+<p>Profit.</p>
+
+<h4>Extra Stuff</h4>
+
+<p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Better Symfony Environments: Large Systems]]></title>
+    <link href="http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems/"/>
+    <updated>2013-06-10T23:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>At my work, we deal with a project where we have several development servers, a few staging servers, and hundreds of production servers.</p>
+
+<h2>The Issue</h2>
+
+<p>Having to deal with all four different environment types, without having environments hardcoded into the project is a little weird, and currently lacks much any real solutions, regarding symfony&rsquo;s documentation.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>In short, I implemented a class that we use in <code>app/console</code> and <code>web/app.php</code>, that reads an Apache environment variable or a <code>php.ini</code> variable with <code>get_cfg_var()</code>.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Like I said above, I made an <code>Environment</code> class to check what environment the server belongs in. I made it a gist for you guys: <a href="https://gist.github.com/5753723.git.">https://gist.github.com/5753723.git.</a></p>
+
+<p>Basically, this environment class, can take an <code>ArgvInput</code> param as a constructor, and if it does, it assumes that it&rsquo;s CLI. If it&rsquo;s CLI, it will do the same CLI checks the symfony does by default for <code>$env</code>, and <code>$debug</code>. Cli and web both allow for specifying <code>symfony.environment</code> in php.ini as well, and the web piece allows you to specify an apache env variable (e.g. <code>SetEnv SYM_ENV stage</code>).</p>
+
+<p>Once you&rsquo;ve got that code, place it into <code>app/Environment.php</code> (you&rsquo;ll have to create it). From there, copy the logic I&rsquo;ve got for <code>app/consle</code> and <code>web/app.php</code> below.</p>
+
+<figure class='code'><figcaption><span>/etc/php5/conf.d/symfony.ini</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ini'><span class='line'><span class="k">[symfony]</span>
+</span><span class='line'><span class="na">symfony.environment</span> <span class="o">=</span> <span class="s">staging</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>console</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="nb">set_time_limit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/bootstrap.php.cache&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/AppKernel.php&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span> <span class="o">.</span><span class="s1">&#39;/../app/Environment.php&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Bundle\FrameworkBundle\Console\Application</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\Console\Input\ArgvInput</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$input</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ArgvInput</span><span class="p">(</span> <span class="p">);</span>
+</span><span class='line'><span class="nv">$env</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Environment</span><span class="p">(</span> <span class="nv">$input</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$kernel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AppKernel</span><span class="p">(</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getEnvironment</span><span class="p">(),</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getDebug</span><span class="p">()</span> <span class="p">);</span>
+</span><span class='line'><span class="nv">$application</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Application</span><span class="p">(</span><span class="nv">$kernel</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$application</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">(</span> <span class="nv">$input</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span>app.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$loader</span> <span class="o">=</span> <span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../app/bootstrap.php.cache&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../app/AppKernel.php&#39;</span><span class="p">;</span>
+</span><span class='line'><span class="k">require_once</span> <span class="nx">__DIR__</span> <span class="o">.</span><span class="s1">&#39;/../app/Environment.php&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$env</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Environment</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$kernel</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AppKernel</span><span class="p">(</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getEnvironment</span><span class="p">(),</span> <span class="nv">$env</span><span class="o">-&gt;</span><span class="na">getDebug</span><span class="p">()</span> <span class="p">);</span>
+</span><span class='line'><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">loadClassCache</span><span class="p">();</span>
+</span><span class='line'><span class="nx">Request</span><span class="o">::</span><span class="na">enableHttpMethodParameterOverride</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$response</span> <span class="o">=</span> <span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$response</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+</span><span class='line'><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">terminate</span><span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Guzzle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/06/03/guzzle/"/>
+    <updated>2013-06-03T04:18:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/06/03/guzzle</id>
+    <content type="html"><![CDATA[<p>After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.</p>
+
+<p>I decided to go with the Guzzle HTTP client. Here are the slides: <a href="http://guzzle.aaronscherer.me">http://guzzle.aaronscherer.me</a></p>
+
+<iframe height="500" width="700" src="http://guzzle.aaronscherer.me"></iframe>
+
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/"/>
+    <updated>2013-05-30T18:19:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope</id>
+    <content type="html"><![CDATA[<p>Getting into testing at work with one of our new projects, and we need to be able to test our services. The biggest problem I had here, is that we have several services not in the default scope. After a little bit of digging and testing, I came up with this:</p>
+
+<figure class='code'><figcaption><span>RequestServiceTest.php</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="sd">/**</span>
+</span><span class='line'><span class="sd"> * @author    Aaron Scherer &lt;aaron@undergroundelephant.com&gt;</span>
+</span><span class='line'><span class="sd"> * @date      2013</span>
+</span><span class='line'><span class="sd"> * @copyright Underground Elephant</span>
+</span><span class='line'><span class="sd"> */</span>
+</span><span class='line'><span class="k">namespace</span> <span class="nx">Ue\Bundle\RenderBundle\Tests\Service</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Bundle\FrameworkBundle\Test\WebTestCase</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\HttpKernel\HttpKernelInterface</span><span class="p">;</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">use</span> <span class="nx">Ue\Bundle\RenderBundle\Service\RequestService</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sd">/**</span>
+</span><span class='line'><span class="sd"> * RequestServiceTest Class</span>
+</span><span class='line'><span class="sd"> */</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">RequestServiceTest</span> <span class="k">extends</span> <span class="nx">WebTestCase</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @var RequestService</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">private</span> <span class="nv">$requestService</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @var</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">private</span> <span class="nv">$container</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * {@inheritDoc}</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">setUp</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$container</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
+</span><span class='line'>      <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">enterScope</span><span class="p">(</span> <span class="s1">&#39;request&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">create</span><span class="p">(</span> <span class="s1">&#39;/t/1/&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$session</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getMock</span><span class="p">(</span> <span class="s1">&#39;Symfony\Component\HttpFoundation\Session\SessionInterface&#39;</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">setSession</span><span class="p">(</span> <span class="nv">$session</span> <span class="p">);</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="nv">$request</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span> <span class="s1">&#39;ue.render.request&#39;</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * {@inheritDoc}</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">tearDown</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">leaveScope</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @return mixed</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">getContainer</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="k">if</span> <span class="p">(</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">static</span><span class="o">::</span><span class="nv">$kernel</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">createKernel</span><span class="p">(</span> <span class="p">);</span>
+</span><span class='line'>      <span class="k">static</span><span class="o">::</span><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">boot</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * Testing the constructor, and service call</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">testRequestService</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$expected</span> <span class="o">=</span> <span class="s1">&#39;Ue\Bundle\RenderBundle\Service\RequestService&#39;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertInstanceOf</span><span class="p">(</span>
+</span><span class='line'>          <span class="nv">$expected</span><span class="p">,</span>
+</span><span class='line'>          <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span><span class="p">,</span>
+</span><span class='line'>          <span class="nb">sprintf</span><span class="p">(</span> <span class="s2">&quot;Expected %s for requestService. Got %s.&quot;</span><span class="p">,</span> <span class="nv">$expected</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span> <span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="sd">/**</span>
+</span><span class='line'><span class="sd">  * @depends testRequestService</span>
+</span><span class='line'><span class="sd">  */</span>
+</span><span class='line'>  <span class="k">public</span> <span class="k">function</span> <span class="nf">testBuildRequest</span><span class="p">()</span>
+</span><span class='line'>  <span class="p">{</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span><span class="o">-&gt;</span><span class="na">setTestId</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nv">$expected</span> <span class="o">=</span> <span class="s1">&#39;Ue\Bundle\RenderBundle\Model\Request&#39;</span><span class="p">;</span>
+</span><span class='line'>      <span class="nv">$request</span>  <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">requestService</span><span class="o">-&gt;</span><span class="na">buildRequest</span><span class="p">();</span>
+</span><span class='line'>      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assertInstanceOf</span><span class="p">(</span>
+</span><span class='line'>          <span class="nv">$expected</span><span class="p">,</span>
+</span><span class='line'>          <span class="nv">$request</span><span class="p">,</span>
+</span><span class='line'>          <span class="nb">sprintf</span><span class="p">(</span> <span class="s2">&quot;Expected %s for response from buildRequest(). Got %s instead.&quot;</span><span class="p">,</span> <span class="nv">$expected</span><span class="p">,</span> <span class="nb">get_class</span><span class="p">(</span> <span class="nv">$request</span> <span class="p">)</span> <span class="p">)</span>
+</span><span class='line'>      <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This creates the request (which you need to get the service), sets up the kernel, and because our <code>RequestService</code> is in the <code>request</code> scope, enters the <code>request</code> scope with <code>$container-&gt;enterScope( 'request' );</code>.</p>
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[IP Based Htaccess Restriction]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/29/ip-based-htaccess-restriction/"/>
+    <updated>2013-05-29T07:01:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/29/ip-based-htaccess-restriction</id>
+    <content type="html"><![CDATA[<p>A couple months ago, I was looking for a way to restrict a development site in such a way, that while people were at work (where we have a static IP), and then require an <code>.htpasswd</code> file for everyone outside.</p>
+
+<p>Well, it was actually kind of simple. After youve got your <code>.htpasswd</code> file set up, just throw this inside your vhost</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='apache'><span class='line'><span class="nb">AuthName</span> <span class="s2">&quot;Change This&quot;</span>
+</span><span class='line'><span class="nb">AuthUserFile</span> <span class="sx">/path/to/.htpasswd</span>
+</span><span class='line'><span class="nb">AuthType</span> Basic
+</span><span class='line'><span class="nb">Satisy</span> <span class="k">Any</span>
+</span><span class='line'><span class="nt">&lt;Limit</span> <span class="s">GET POST</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nb">Order</span> Deny,Allow
+</span><span class='line'>  <span class="nb">Deny</span> from <span class="k">all</span>
+</span><span class='line'>  <span class="nb">Allow</span> from <span class="m">12.34.56.789</span>
+</span><span class='line'>  <span class="nb">Require</span> valid-user
+</span><span class='line'><span class="nt">&lt;/Limit&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For your environment, you should change the <code>AuthName</code>, the <code>AuthUserFile</code>, the <code>Limit</code> (maybe, <code>GET</code> and <code>POST</code> might be enough), and the <code>IP</code> (<code>12.34.56.789</code>).</p>
+
+<p>Change out the variables for what your environment requires, and you should be all set.</p>
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Checking Named Class Inheritance]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance/"/>
+    <updated>2013-05-24T15:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance</id>
+    <content type="html"><![CDATA[<hr />
+
+<p>I have been working on a new cache implementation for the <code>Symfony2</code> framework, and I needed a way to check if a named class inherited a given interface , so i wrote the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">classInherits</span><span class="p">(</span> <span class="nv">$class</span><span class="p">,</span> <span class="nv">$inherit</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span> <span class="nb">is_object</span><span class="p">(</span> <span class="nv">$class</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">(</span> <span class="nv">$class</span> <span class="nx">instanceof</span> <span class="nv">$inherit</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">elseif</span><span class="p">(</span> <span class="nb">is_string</span><span class="p">(</span> <span class="nv">$class</span> <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="nb">in_array</span><span class="p">(</span> <span class="nv">$inherit</span><span class="p">,</span> <span class="nb">class_implements</span><span class="p">(</span> <span class="nv">$class</span> <span class="p">)</span> <span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span> <span class="s2">&quot;First value must be the name of a valid class, or an instance of one.&quot;</span> <span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="cp">?&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hope this helps!</p>
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Beautiful Bash Prompt]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/23/beautiful-bash-prompt/"/>
+    <updated>2013-05-23T18:14:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/23/beautiful-bash-prompt</id>
+    <content type="html"><![CDATA[<hr />
+
+<p>I have been using linux for several years now, and my bash prompt has been evolving more and more, every time I use it, but I wanted to share with you guys today, what mine looks like, and how yours can look the same.</p>
+
+<p><img src="http://aequasi.github.io/images/posts/bash/bash-prompt.png"></p>
+
+<ol>
+<li>First off, we need a file of color codes.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>git clone https://gist.github.com/5638294.git <span class="o">&amp;&amp;</span> mv 5638294/colors.sh ~/ <span class="o">&amp;&amp;</span> sudo rm -r 5638294 <span class="o">&amp;&amp;</span> chmod +x ~/colors.sh <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&quot;source ~/colors.sh&quot;</span> &gt;&gt; ~/.bashrc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Now that we have all the colors sources into the bashrc, we can create the PS1.
+Take the following, and place it at the bottom of your <code>~/.bashrc</code> file, after <code>source ~/colors.sh</code>.</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="nb">echo</span> <span class="s1">&#39;export PS1=&quot;\n\[$Blue\]+-[\[$Color_Off\]\[$Yellow\]\u\[$Color_Off\]\[$Cyan\]@\[$Color_Off\]\[$Yellow\]\h\[$Color_Off\]\[$Blue\]]-[\[$Color_Off\]\[$White\]\w\[$Color_Off\]\[$Blue\]][\[$Color_Off\]\[$Red\]\T\[$Color_Off\]\[$Blue\]]\[$Color_Off\]\n\[$Blue\]+-\[$Red\][\[$Color_Off\]\[$White\]\$\[$Color_Off\]\[$Red\]]~\[$Color_Off\]&quot;&#39;</span> &gt;&gt; ~/.bashrc
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>Then just reopen your prompt, and you&rsquo;ve got the new bash prompt!</li>
+</ol>
+
+]]></content>
+  </entry>
+	
+  
+	
+  <entry>
+    <title type="html"><![CDATA[Symfony 2 and Memcached: A new Bundle]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle/"/>
+    <updated>2013-05-23T16:57:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/23/symfony-2-and-memcached-a-new-bundle</id>
+    <content type="html"><![CDATA[<hr />
+
+<h3>Introduction</h3>
+
+<p>So, I started work on a personal project of mine that I wanted to be able to use <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a>. The project is using the <a href="http://www.symfony.com"><code>Symfony2 PHP framework</code></a>, so I decided to look around a little bit to see if I could find a bundle that does what I needed.</p>
+
+<p>I stumbled upon the <a href="https://github.com/LeaseWeb/LswMemcacheBundle"><code>LswMemcacheBundle</code></a> at first, and it looked quite nice, having features like <code>Anti Dog Pile</code>, and <code>Profiling</code> attached to the <code>Web Profiler Toolbar</code>. I started looking at the code however, and it had a lot of bloat that I didnt want, some of the terminologies werent right, and it was missing a feature that I wanted. So I took it and decided to write my own.</p>
+
+<h3>The Result</h3>
+
+<p>So now, I give you the <a href="https://github.com/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a>! This takes a lot of the core logic, and features of the <a href="https://github.com/LeaseWeb/LswMemcacheBundle"><code>LswMemcacheBundle</code></a>, but removes the ability to use the <a href="http://www.php.net/manual/en/class.memcache.php"><code>Memcache</code></a> extension, and the compatibility with <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a> versions below <code>2.0</code>.</p>
+
+<h3>Features</h3>
+
+<ul>
+<li>Cluster Support
+
+<ul>
+<li>Can have mutlple clusters</li>
+</ul>
+</li>
+<li><a href="http://www.doctrine-project.org/"><code>Doctrine</code></a> Support
+
+<ul>
+<li>Supports all doctrine cache types (<code>metadata</code>, <code>query</code>, and <code>result</code>)</li>
+</ul>
+</li>
+<li>Session Support
+
+<ul>
+<li>Storing sessions in <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a> instead of <a href="http://www.php.net/manual/en/class.pdo.php"><code>PDO</code></a> or <code>File</code></li>
+</ul>
+</li>
+<li>Injectable Service
+
+<ul>
+<li>Can be used (as a service) wherever the <code>container</code> is.</li>
+</ul>
+</li>
+<li><code>Mysql</code> Key-Map support
+
+<ul>
+<li>When storing values in <a href="http://www.php.net/manual/en/class.memcached.php"><code>Memcached</code></a>, a row is added to a mysql table, showing the key, the size of the value, how long the ttl is, and when it should expire.</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Installing</h3>
+
+<p>To install this bundle, check out the source <a href="https://github.com/aequasi/memcached-bundle">here</a>, and follow the instructions in the readme.</p>
+]]></content>
+  </entry>
+	
+  
+</feed>
