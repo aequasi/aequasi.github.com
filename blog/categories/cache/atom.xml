@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cache | Seductive Programming Blog]]></title>
   <link href="http://aequasi.github.io/blog/categories/cache/atom.xml" rel="self"/>
   <link href="http://aequasi.github.io/"/>
-  <updated>2013-07-31T06:14:43+00:00</updated>
+  <updated>2013-07-31T06:15:34+00:00</updated>
   <id>http://aequasi.github.io/</id>
   <author>
     <name><![CDATA[Aaron Scherer]]></name>
@@ -34,34 +34,62 @@
 
 <p>Then, in <code>app/AppCache.php</code>, do the following:</p>
 
-<ol>
-<li><p>Require the <code>MemcachedStore</code> class at the top</p>
+<h3>First:</h3>
 
-<p> ```php
- require_once <strong>DIR</strong> . &lsquo;/MemcachedStore.php&rsquo;;
- ````</p></li>
-<li><p>Overwrite the <code>createStore()</code> function</p>
+<p>Require the <code>MemcachedStore</code> class at the top</p>
 
-<p> ```php
- public function createStore()
- {
-     $servers = [
-         [ &lsquo;localhost&rsquo;, 11211 ]
-     ];</p>
+<p>```php
+&lt;?php</p>
 
-<pre><code> return new MemcachedStore( [
-     'enabled'      =&gt; true,
-     'debug'        =&gt; true,
-     'persistentId' =&gt; serialize( $servers )
- ], $servers );
+<p>require_once <strong>DIR</strong> . &lsquo;/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> . &lsquo;/MemcachedStore.php&rsquo;;</p>
+
+<p>class AppCache
+{</p>
+
+<pre><code>// ...
 </code></pre>
 
-<p> }
- ```</p></li>
-<li><p>?!?$?</p></li>
-<li><p>Profit.</p></li>
-</ol>
+<p>```</p>
 
+<h3>Second:</h3>
+
+<p>Overwrite the <code>createStore()</code> function</p>
+
+<p>```php
+&lt;?php
+//&hellip;
+class AppCache
+{</p>
+
+<pre><code>// ...
+public function createStore()
+{
+    $servers = [
+        [ 'localhost', 11211 ]
+    ];
+
+    return new MemcachedStore( [
+        'enabled'      =&gt; true,
+        'debug'        =&gt; true,
+        'persistentId' =&gt; serialize( $servers )
+    ], $servers );
+}
+// ...
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>Third:</h3>
+
+<p>?!?$?</p>
+
+<h3>Fourth:</h3>
+
+<p>Profit.</p>
+
+<h4>Extra Stuff</h4>
 
 <p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
 ]]></content>
