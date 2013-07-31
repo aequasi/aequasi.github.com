@@ -5,7 +5,7 @@ date: "2013-07-31 05:41"
 comments: true
 categories: null
 draft: true
-published: false
+published: true
 ---
 
 I was looking for a way to be able to have an input, that when you change, would roll to the next input. The project I'm working on has a page based system, so each page has its own fieldset. When the last field is completed, I wanted it to automatically roll to the next page. I also wanted functionality for zip code, and phone number fields, that would roll to the next input after 5 digits on zip, or roll to the next piece of the phone number field.
