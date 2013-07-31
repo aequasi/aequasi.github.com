@@ -4,7 +4,6 @@ title: "Jquery: Roll to Next Input"
 date: "2013-07-31 05:41"
 comments: true
 categories: null
-draft: true
 published: true
 ---
 
