@@ -119,3 +119,17 @@ facebook_like: true
 
 linkedin_user: aequasi
 coderwall_user: aequasi
+
+# Prose.io settings
+prose:
+    rooturl: "source"
+    metadata:
+        "source/_posts": |
+            layout: post
+            title: "Change Title"
+            comments: true
+            author:
+              - Aaron Scherer
+            categories:
+              - All Posts
+            published: true

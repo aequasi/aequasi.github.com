@@ -1,5 +1,17 @@
+branches:
+  only:
+  - source
 language: ruby
 rvm:
-  - 1.9.3
-  - 1.9.2
-script: bundle exec rake install; bundle exec rake generate
+- 1.9.3
+before_script:
+- export REPO_URL="https://$GH_TOKEN@github.com/$GH_REPO.git"
+- rake setup_github_pages[$REPO_URL]
+script:
+- rake generate
+after_script:
+- rake deploy
+env: 
+  global: 
+    - GH_REPO="aequasi/aequasi.github.com"
+    - secure: ontwni3dQwKPfBWO65D6R8mvGOvNyRwXG6rgl6Atx/6SBan3XVU6nMn+AzHQRzUY47v5A+crcPqbURMBkuo70YRZMNMUJDag8daMG5xKBHD0BVDIgy0HW8e8XVQ8YFGCNq+6uGfkwmGlZQsTUV2V+kgpWT9xiKMajVlQRzba17k=
