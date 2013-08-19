@@ -2,7 +2,7 @@
 layout: post
 title: "Jquery: Roll to Next Input"
 date: "2013-07-31 05:41"
-comments: "true"
+comments: true
 categories: jQuery
 published: 
   - true

@@ -128,7 +128,7 @@ prose:
             layout: post
             title: "Change Title"
             date: 2013-08-01 00:00:00
-            comments: "true"
+            comments: true
             author: "Aaron Scherer"
             categories:
             published: "true"
