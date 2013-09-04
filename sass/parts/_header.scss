@@ -297,6 +297,13 @@ $header-height: 30px;
 					border: 1px solid darken(#C83D20, 10%);
 				}
 			}
+			&.ue{
+				background: image-url('social/twitter.png') center no-repeat #B00000;
+				border: 1px solid #B00000;
+				&:hover{
+					border: 1px solid darken(#B00000, 10%);
+				}
+			}
 			&.twitter{
 				background: image-url('social/twitter.png') center no-repeat #55CFF8;
 				border: 1px solid #55CFF8;
