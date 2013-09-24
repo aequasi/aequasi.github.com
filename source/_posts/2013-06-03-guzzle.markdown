@@ -1,10 +1,20 @@
 ---
 layout: post
-title: "Guzzle"
-date: 2013-06-03 04:18
-comments: true
-categories: [ 'PHP' ]
-tags: [ 'PHP', 'API', 'REST' ]
+title: Guzzle
+date: "2013-06-03 04:18"
+comments: 
+  - true
+  - "true"
+categories: 
+  - PHP
+tags: 
+  - PHP
+  - API
+  - REST
+published: 
+  - true
+  - "true"
+author: Aaron Scherer
 ---
 
 After having been to Portland for the Symfony Live conference, I was asked to put together a presentation on something that I learned that would be benificial for the company.
