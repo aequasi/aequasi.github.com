@@ -4,17 +4,13 @@ title: Guzzle
 date: "2013-06-03 04:18"
 comments: 
   - true
-  - "true"
-  - "true,true"
 categories: 
   - PHP
 tags: 
   - PHP
   - API
   - REST
-published: 
-  - true
-  - "false"
+published: false
 author: Aaron Scherer
 ---
 
