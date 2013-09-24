@@ -9,7 +9,7 @@ categories: jquery
 
 I've been working on a project at [Underground Elephant][1] that is a very very very heavy javascript project. Its heavily event driven, but I've been having the issue of a lack of event priorties in jquery. The [Symfony 2 Event Listener][2] is a great example of what an event listener should look like, for a couple reasons. First, and most importantly (to me at least), the events have a priority. Secondly, Events have specific classes that get passed with them, so you know exactly what to expect.
 
-I wanted something like this for javascript, but there was really nothing out there for jQuery. In fact, [Dave Methvin][3]([@davemethvin][4]), a member of the jQuery core team, made this comment about a year ago:
+I wanted something like this for javascript, but there was really nothing out there for jQuery. In fact, Dave Methvin([@davemethvin][4]), a member of the jQuery core team, made this comment about a year ago:
 
 
 > We've discussed this before and decided it's not productive to have handlers that try to out-prioritize each other.
@@ -113,3 +113,9 @@ Contributions
 
 If you would like to help with contributing, please do! Just fork this code, make your changes and put in a pull request.
 I would love for this framework to work with element bound events, but I don't have enough time to figure that out.
+
+
+[1]: http://www.undergroundelephant.com/
+[2]: http://symfony.com/doc/current/components/event_dispatcher/introduction.html
+[4]: https://twitter.com/davemethvin
+[5]: https://github.com/fusion-events/fusion-framework
