@@ -5,6 +5,7 @@ date: "2013-06-03 04:18"
 comments: 
   - true
   - "true"
+  - "true,true"
 categories: 
   - PHP
 tags: 
@@ -12,7 +13,7 @@ tags:
   - API
   - REST
 published: 
-  - true
+  - false
   - "true"
 author: Aaron Scherer
 ---
