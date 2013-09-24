@@ -13,8 +13,8 @@ tags:
   - API
   - REST
 published: 
-  - false
-  - "true"
+  - true
+  - "false"
 author: Aaron Scherer
 ---
 
