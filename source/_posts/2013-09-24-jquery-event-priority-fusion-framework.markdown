@@ -1,13 +1,23 @@
 ---
 layout: post
 title: "jQuery Event Priority - Fusion Framework"
-date: 2013-09-24 15:36
-tags: [ jquery, javascript, events, fusion-framework ]
-comments: true
+date: "2013-09-24 15:36"
+tags: 
+  - jquery
+  - javascript
+  - events
+  - "fusion-framework"
+comments: 
+  - true
+  - "true"
 categories: jquery
+published: 
+  - true
+  - "true"
+author: Aaron Scherer
 ---
 
-I've been working on a project at [Underground Elephant][1] that is a very very very heavy javascript project. Its heavily event driven, but I've been having the issue of a lack of event priorties in jquery. The [Symfony 2 Event Listener][2] is a great example of what an event listener should look like, for a couple reasons. First, and most importantly (to me at least), the events have a priority. Secondly, Events have specific classes that get passed with them, so you know exactly what to expect.
+I've been working on a project at [Underground Elephant][1] that is a very very very heavy javascript project. Its heavily event driven, but I have an issue with the lack of event priorities in jquery. The [Symfony 2 Event Listener][2] is a great example of what an event listener should look like, for a couple reasons. First, and most importantly (to me at least), the events have a priority. Secondly, Events have specific classes that get passed with them, so you know exactly what to expect.
 
 I wanted something like this for javascript, but there was really nothing out there for jQuery. In fact, Dave Methvin([@davemethvin][4]), a member of the jQuery core team, made this comment about a year ago:
 
