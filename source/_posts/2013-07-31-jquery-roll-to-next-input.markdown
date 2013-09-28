@@ -6,7 +6,6 @@ comments: true
 categories: jQuery
 published: 
   - true
-  - "true"
 author: Aaron Scherer
 ---
 

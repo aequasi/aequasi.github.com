@@ -9,11 +9,9 @@ tags:
   - "fusion-framework"
 comments: 
   - true
-  - "true"
-categories: jquery
+categories: jQuery
 published: 
   - true
-  - "true"
 author: Aaron Scherer
 ---
 
