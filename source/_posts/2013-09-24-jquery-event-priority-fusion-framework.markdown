@@ -7,11 +7,9 @@ tags:
   - javascript
   - events
   - "fusion-framework"
-comments: 
-  - true
+comments: true
 categories: jQuery
-published: 
-  - true
+published: true
 author: Aaron Scherer
 ---
 
