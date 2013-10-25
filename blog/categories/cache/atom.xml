@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Cache | Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/blog/categories/cache/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-10-25T05:57:09+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony Reverse Proxy: Memcached]]></title>
+    <link href="http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/"/>
+    <updated>2013-07-29T14:45:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>Basically, we wanted to be able to use a simple Reverse Proxy (not Varnish, not Squid), that used a Memcache installation, instead of the file system.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>I wrote a new <code>MemcachedStore</code> class that <code>AppCache</code> now uses instead. The biggest downside is, the configs for the servers isnt used by the AppCache piece.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Heres the <a href="https://gist.github.com/aequasi/6108241">MemcachedStore class</a>. Right now, its set up to use my <a href="https://packagist.org/packages/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a> symfony bundle at the moment, but it wouldnt be that hard to change to just using <code>Memcached</code> or <code>Memcache</code>.</p>
+
+<p>Place this file in your <code>app</code> directory.</p>
+
+<p>Then, in <code>app/AppCache.php</code>, do the following:</p>
+
+<h3>First:</h3>
+
+<p>Require the <code>MemcachedStore</code> class at the top</p>
+
+<p>```php
+&lt;?php</p>
+
+<p>require_once <strong>DIR</strong> . &lsquo;/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> . &lsquo;/MemcachedStore.php&rsquo;;</p>
+
+<p>class AppCache
+{</p>
+
+<pre><code>// ...
+</code></pre>
+
+<p>```</p>
+
+<h3>Second:</h3>
+
+<p>Overwrite the <code>createStore()</code> function</p>
+
+<p>```php
+&lt;?php
+//&hellip;
+class AppCache
+{</p>
+
+<pre><code>// ...
+public function createStore()
+{
+    $servers = [
+        [ 'localhost', 11211 ]
+    ];
+
+    return new MemcachedStore( [
+        'enabled'      =&gt; true,
+        'debug'        =&gt; true,
+        'persistentId' =&gt; serialize( $servers )
+    ], $servers );
+}
+// ...
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>Third:</h3>
+
+<p>?!?$?</p>
+
+<h3>Fourth:</h3>
+
+<p>Profit.</p>
+
+<h4>Extra Stuff</h4>
+
+<p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
+]]></content>
+  </entry>
+  
+</feed>

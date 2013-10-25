@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: jQuery | Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/blog/categories/jquery/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-10-25T05:57:09+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[jQuery Event Priority - Fusion Framework]]></title>
+    <link href="http://aequasi.github.io/blog/2013/09/24/jquery-event-priority-fusion-framework/"/>
+    <updated>2013-09-24T15:36:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/09/24/jquery-event-priority-fusion-framework</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been working on a project at <a href="http://www.undergroundelephant.com/">Underground Elephant</a> that is a very very very heavy javascript project. Its heavily event driven, but I have an issue with the lack of event priorities in jquery. The <a href="http://symfony.com/doc/current/components/event_dispatcher/introduction.html">Symfony 2 Event Listener</a> is a great example of what an event listener should look like, for a couple reasons. First, and most importantly (to me at least), the events have a priority. Secondly, Events have specific classes that get passed with them, so you know exactly what to expect.</p>
+
+<p>I wanted something like this for javascript, but there was really nothing out there for jQuery. In fact, Dave Methvin(<a href="https://twitter.com/davemethvin">@davemethvin</a>), a member of the jQuery core team, made this comment about a year ago:</p>
+
+<blockquote><p>We&rsquo;ve discussed this before and decided it&rsquo;s not productive to have handlers that try to out-prioritize each other.
+You&rsquo;re welcome to write something like that implementation as a plugin, as long as it&rsquo;s understood that it uses internals that may change and break the code.</p></blockquote>
+
+<p>This was a little disappointing to me, but I can understand a little why they made this decision.</p>
+
+<p>So, with all this, I decided to make a small little addoon for jQuery that allows for creating custom events. The custom events can have priorties, and require a defined &ldquo;class&rdquo; (as javascript uses it).</p>
+
+<p>Without further ado, i present to you: <a href="https://github.com/fusion-events/fusion-framework">Fusion Framework</a></p>
+
+<h1>DISCLAIMER</h1>
+
+<p>As of right now, this framework only supports custom events.
+You cannot use this for events that are meant to be bound to elements.</p>
+
+<h1>Requirements</h1>
+
+<p>This framework requires jQuery 1.9 or higher.</p>
+
+<h1>To Use</h1>
+
+<h4>Creating Events</h4>
+
+<p>Right now, there are only two built in events. <code>DOCUMENT_LOAD</code>, and <code>DOCUMENT_UNLOAD</code>.
+To use your own custom events, you need to add them to the event list, which can be done as follows:</p>
+
+<p>```js
+( function( fusion ) {</p>
+
+<pre><code>fusion.events.add( 'SOME_EVENT_NAME', fusion.event.extend( { somevar: null } ) );
+
+// You can store those in classes too. For example, the DOCUMENT_LOAD stuff
+var func = fusion.event.extend( {
+    window: window,
+    document: document
+} );
+
+fusion.events.add( 'DOCUMENT_LOAD', func );
+</code></pre>
+
+<p>} )( $.fn.fusion );
+```</p>
+
+<h4>Binding Events (with priorities)</h4>
+
+<p>To bind to these events, we will be using the <code>fuse</code> method. Pretty simple, from the demo app:</p>
+
+<p>You can get to the event&rsquo;s data with <code>event.getData( [key] )</code>.</p>
+
+<p>```js
+// Note, by default $f is an alias of $.fn.fusion</p>
+
+<p>// Create your first event. This has a default priority of 50.
+$f.fuse( &lsquo;DOCUMENT_LOAD&rsquo;, function( event ) {</p>
+
+<pre><code>event.getData( 'window' ).location.href += "#test";
+</code></pre>
+
+<p>} );</p>
+
+<p>// Later down the line in your app, you want something bound before the above.
+// So we create another bind, but set the priority to something lower than 50 (5 here).
+$f.fuse( &lsquo;DOCUMENT_LOAD&rsquo;, function( event ) {</p>
+
+<pre><code>event.getData( 'window' ).location.href += "#highesttest";
+</code></pre>
+
+<p>}, 5 );</p>
+
+<p>// Even later down, we want something bound after the other two events.
+// So we create another bind, but set the priority to something higher than 50 (70 here).
+$f.fuse( &lsquo;DOCUMENT_LOAD&rsquo;, function( event ) {</p>
+
+<pre><code>event.getData( 'window' ).location.href += "#test";
+</code></pre>
+
+<p>}, 70 );
+```</p>
+
+<p>You now have three binds on the <code>DOCUMENT_LOAD</code> event.</p>
+
+<h4>Firing Events</h4>
+
+<p>To fire these events, just call the <code>ignite</code> method, and pass in the event class&rsquo;s variables. Super simple.</p>
+
+<p>For example, the <code>DOCUMENT_LOAD</code> and <code>DOCUMENT_UNLOAD</code> events.</p>
+
+<p>```js
+$(function () {</p>
+
+<pre><code>fusion.ignite( 'DOCUMENT_LOAD', { window: window, cheese: 'cheese' } );
+$( document ).unload( function( ) {
+    fusion.ignite( 'DOCUMENT_UNLOAD', { window: window } );
+} )
+</code></pre>
+
+<p>});
+```</p>
+
+<p>If you noticed, as a test, I&rsquo;ve added <code>cheese: 'cheese'</code> to the <code>DOCUMENT_LOAD</code> event, to see if you could access that on the page.
+You can test this yourself, but in the binds, you wont be able to access the <code>cheese</code> data, because it was never in the class properties.</p>
+
+<h1>Contributions</h1>
+
+<p>If you would like to help with contributing, please do! Just fork this code, make your changes and put in a pull request.
+I would love for this framework to work with element bound events, but I don&rsquo;t have enough time to figure that out.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Jquery: Roll to Next Input]]></title>
+    <link href="http://aequasi.github.io/blog/2013/07/31/jquery-roll-to-next-input/"/>
+    <updated>2013-07-31T05:41:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/07/31/jquery-roll-to-next-input</id>
+    <content type="html"><![CDATA[<p>I was looking for a way to have an input, that when you change, would roll to the next input. The project I&rsquo;m working on has a page based system, so each page has its own fieldset. When the last field is completed, I wanted it to automatically roll to the next page. I also wanted functionality for zip code, and phone number fields, that would roll to the next input after 5 digits on zip, or roll to the next piece of the phone number field.</p>
+
+<h3>The Solution</h3>
+
+<p>Starting off with the binds</p>
+
+<p><code>js
+$( document ).on( 'keyup click', ':input.rollToNext', rollToNext );
+</code></p>
+
+<p>Then, the actual function</p>
+
+<p>```js
+function rollToNext( event ) {</p>
+
+<pre><code>switch( event.type ) {
+    case 'click':
+        if( !$( this ).is( 'select' ) ) return false;
+        break;
+    case 'keyup':
+        var code = event.keyCode ? event.keyCode : event.which;
+        if( $( this ).is( 'select' ) &amp;&amp; code != 13 &amp;&amp; code != 9 ) return false;
+        break;
+}
+
+// If the function has made it here, we should run the roll to next logic
+var fieldset = $( 'fieldset:visible' ),
+    fields = fieldset.find( ':input:visible' ),
+    empty = fields.filter(function() { return !$( this ).val().length } ).length;
+
+    if( !empty &amp;&amp; fieldset.find( ':input#form_validate' ).length == 0 ) {
+        // Show the next page here (Our own custom function)
+    }
+
+    // Now for the logic that rolls to the next input on zipcode and phone
+    if( $( this ).attr( 'maxlength' ) !== undefined ) {
+
+        //Making sure it was actually a character that was typed
+        var inp = String.fromCharCode( event.keyCode );
+        if( !(/[a-zA-Z0-9-_ \.]/.test( inp )) ) return true;
+
+        if( $( this ).val().length == $( this ).attr( 'maxlength' ) ) {
+            $( this ).blur();
+
+            for( var i in fields ) {
+                var index = fields[ i ];
+                if( typeof previous != 'undefined' ) return $( index ).focus();
+                if( index == this ) var previous = index;
+            }
+        }
+    }
+</code></pre>
+
+<p>}
+```</p>
+
+<h2>End</h2>
+
+<p>Voila, your <code>rollToNext</code> function is there. All you need to do, is pull a <code>rollToNext</code> class on your input. If you need any help implementing this, hit me up in the comments.</p>
+]]></content>
+  </entry>
+  
+</feed>

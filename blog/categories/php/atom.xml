@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PHP | Seductive Programming Blog]]></title>
+  <link href="http://aequasi.github.io/blog/categories/php/atom.xml" rel="self"/>
+  <link href="http://aequasi.github.io/"/>
+  <updated>2013-10-25T05:57:09+00:00</updated>
+  <id>http://aequasi.github.io/</id>
+  <author>
+    <name><![CDATA[Aaron Scherer]]></name>
+    <email><![CDATA[aequasi@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony Reverse Proxy: Memcached]]></title>
+    <link href="http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached/"/>
+    <updated>2013-07-29T14:45:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/07/29/syfmony-reverse-proxy-memcached</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>Basically, we wanted to be able to use a simple Reverse Proxy (not Varnish, not Squid), that used a Memcache installation, instead of the file system.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>I wrote a new <code>MemcachedStore</code> class that <code>AppCache</code> now uses instead. The biggest downside is, the configs for the servers isnt used by the AppCache piece.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Heres the <a href="https://gist.github.com/aequasi/6108241">MemcachedStore class</a>. Right now, its set up to use my <a href="https://packagist.org/packages/aequasi/memcached-bundle"><code>AequasiMemcachedBundle</code></a> symfony bundle at the moment, but it wouldnt be that hard to change to just using <code>Memcached</code> or <code>Memcache</code>.</p>
+
+<p>Place this file in your <code>app</code> directory.</p>
+
+<p>Then, in <code>app/AppCache.php</code>, do the following:</p>
+
+<h3>First:</h3>
+
+<p>Require the <code>MemcachedStore</code> class at the top</p>
+
+<p>```php
+&lt;?php</p>
+
+<p>require_once <strong>DIR</strong> . &lsquo;/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> . &lsquo;/MemcachedStore.php&rsquo;;</p>
+
+<p>class AppCache
+{</p>
+
+<pre><code>// ...
+</code></pre>
+
+<p>```</p>
+
+<h3>Second:</h3>
+
+<p>Overwrite the <code>createStore()</code> function</p>
+
+<p>```php
+&lt;?php
+//&hellip;
+class AppCache
+{</p>
+
+<pre><code>// ...
+public function createStore()
+{
+    $servers = [
+        [ 'localhost', 11211 ]
+    ];
+
+    return new MemcachedStore( [
+        'enabled'      =&gt; true,
+        'debug'        =&gt; true,
+        'persistentId' =&gt; serialize( $servers )
+    ], $servers );
+}
+// ...
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>Third:</h3>
+
+<p>?!?$?</p>
+
+<h3>Fourth:</h3>
+
+<p>Profit.</p>
+
+<h4>Extra Stuff</h4>
+
+<p>If you want to create a service to get to this particular store, you would have to create a <code>$cache</code> variable in your <code>app/AppKernel</code>, and overwrite your <code>app/AppCache</code>&rsquo;s <code>handle()</code> method to set the kernel&rsquo;s <code>$cache</code> variable before calling <code>parent::handle</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Better Symfony Environments: Large Systems]]></title>
+    <link href="http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems/"/>
+    <updated>2013-06-10T23:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/06/10/better-symfony-environments-large-systems</id>
+    <content type="html"><![CDATA[<h2>The Background</h2>
+
+<p>At my work, we deal with a project where we have several development servers, a few staging servers, and hundreds of production servers.</p>
+
+<h2>The Issue</h2>
+
+<p>Having to deal with all four different environment types, without having environments hardcoded into the project is a little weird, and currently lacks much any real solutions, regarding symfony&rsquo;s documentation.</p>
+
+<h2>The Solution &ndash; Short</h2>
+
+<p>In short, I implemented a class that we use in <code>app/console</code> and <code>web/app.php</code>, that reads an Apache environment variable or a <code>php.ini</code> variable with <code>get_cfg_var()</code>.</p>
+
+<h2>The Solution &ndash; Long</h2>
+
+<p>Like I said above, I made an <code>Environment</code> class to check what environment the server belongs in. I made it a gist for you guys: <a href="https://gist.github.com/5753723.git.">https://gist.github.com/5753723.git.</a></p>
+
+<p>Basically, this environment class, can take an <code>ArgvInput</code> param as a constructor, and if it does, it assumes that it&rsquo;s CLI. If it&rsquo;s CLI, it will do the same CLI checks the symfony does by default for <code>$env</code>, and <code>$debug</code>. Cli and web both allow for specifying <code>symfony.environment</code> in php.ini as well, and the web piece allows you to specify an apache env variable (e.g. <code>SetEnv SYM_ENV stage</code>).</p>
+
+<p>Once you&rsquo;ve got that code, place it into <code>app/Environment.php</code> (you&rsquo;ll have to create it). From there, copy the logic I&rsquo;ve got for <code>app/consle</code> and <code>web/app.php</code> below.</p>
+
+<p><code>ini /etc/php5/conf.d/symfony.ini
+[symfony]
+symfony.environment = staging
+</code></p>
+
+<p>``` php console
+&lt;?php
+set_time_limit(0);</p>
+
+<p>require_once <strong>DIR</strong>.&lsquo;/bootstrap.php.cache&rsquo;;
+require_once <strong>DIR</strong>.&lsquo;/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> .&lsquo;/../app/Environment.php&rsquo;;</p>
+
+<p>use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;</p>
+
+<p>$input = new ArgvInput( );
+$env = new \Environment( $input );</p>
+
+<p>$kernel = new AppKernel( $env->getEnvironment(), $env->getDebug() );
+$application = new Application($kernel);
+$application->run( $input );
+```</p>
+
+<p>``` php app.php
+&lt;?php</p>
+
+<p>use Symfony\Component\HttpFoundation\Request;</p>
+
+<p>$loader = require_once <strong>DIR</strong>.&lsquo;/../app/bootstrap.php.cache&rsquo;;
+require_once <strong>DIR</strong>.&lsquo;/../app/AppKernel.php&rsquo;;
+require_once <strong>DIR</strong> .&lsquo;/../app/Environment.php&rsquo;;</p>
+
+<p>$env = new \Environment();</p>
+
+<p>$kernel = new AppKernel( $env->getEnvironment(), $env->getDebug() );
+$kernel->loadClassCache();
+Request::enableHttpMethodParameterOverride();
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Symfony2 Testing: Testing Services in Request Scope]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope/"/>
+    <updated>2013-05-30T18:19:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/30/symfony2-testing-testing-services-in-request-scope</id>
+    <content type="html"><![CDATA[<p>Getting into testing at work with one of our new projects, and we need to be able to test our services. The biggest problem I had here, is that we have several services not in the default scope. After a little bit of digging and testing, I came up with this:</p>
+
+<p>``` php RequestServiceTest.php
+&lt;?php
+/<em>*
+ * @author    Aaron Scherer <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#97;&#97;&#114;&#x6f;&#110;&#64;&#117;&#x6e;&#x64;&#x65;&#x72;&#103;&#x72;&#x6f;&#x75;&#110;&#100;&#x65;&#x6c;&#x65;&#112;&#104;&#97;&#x6e;&#x74;&#46;&#x63;&#x6f;&#x6d;">&#97;&#97;&#114;&#111;&#110;&#x40;&#117;&#110;&#x64;&#101;&#114;&#103;&#x72;&#111;&#117;&#110;&#100;&#101;&#108;&#x65;&#x70;&#104;&#x61;&#110;&#116;&#46;&#x63;&#111;&#109;</a>
+ * @date      2013
+ * @copyright Underground Elephant
+ </em>/
+namespace Ue\Bundle\RenderBundle\Tests\Service;</p>
+
+<p>use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;</p>
+
+<p>use Ue\Bundle\RenderBundle\Service\RequestService;</p>
+
+<p>/<em>*
+ * RequestServiceTest Class
+ </em>/
+class RequestServiceTest extends WebTestCase
+{</p>
+
+<pre><code>/**
+ * @var RequestService
+ */
+private $requestService;
+
+/**
+ * @var
+ */
+private $container;
+
+/**
+ * {@inheritDoc}
+ */
+public function setUp()
+{
+    $container = $this-&gt;getContainer();
+    $container-&gt;enterScope( 'request' );
+    $request = Request::create( '/t/1/' );
+    $session = $this-&gt;getMock( 'Symfony\Component\HttpFoundation\Session\SessionInterface' );
+    $request-&gt;setSession( $session );
+    $this-&gt;getContainer()-&gt;set( 'request', $request );
+
+    $this-&gt;requestService = $this-&gt;container-&gt;get( 'ue.render.request' );
+}
+
+/**
+ * {@inheritDoc}
+ */
+public function tearDown()
+{
+    $this-&gt;getContainer()-&gt;leaveScope('request');
+}
+
+/**
+ * @return mixed
+ */
+public function getContainer()
+{
+    if ( $this-&gt;container ) {
+        return $this-&gt;container;
+    }
+
+    static::$kernel = static::createKernel( );
+    static::$kernel-&gt;boot();
+
+    $this-&gt;container = static::$kernel-&gt;getContainer();
+
+    return $this-&gt;container;
+}
+
+/**
+ * Testing the constructor, and service call
+ */
+public function testRequestService()
+{
+
+    $expected = 'Ue\Bundle\RenderBundle\Service\RequestService';
+    $this-&gt;assertInstanceOf(
+        $expected,
+        $this-&gt;requestService,
+        sprintf( "Expected %s for requestService. Got %s.", $expected, get_class( $this-&gt;requestService ) )
+    );
+}
+
+/**
+ * @depends testRequestService
+ */
+public function testBuildRequest()
+{
+    $this-&gt;requestService-&gt;setTestId( 1 );
+
+    $expected = 'Ue\Bundle\RenderBundle\Model\Request';
+    $request  = $this-&gt;requestService-&gt;buildRequest();
+    $this-&gt;assertInstanceOf(
+        $expected,
+        $request,
+        sprintf( "Expected %s for response from buildRequest(). Got %s instead.", $expected, get_class( $request ) )
+    );
+}
+</code></pre>
+
+<p>}
+?>
+```</p>
+
+<p>This creates the request (which you need to get the service), sets up the kernel, and because our <code>RequestService</code> is in the <code>request</code> scope, enters the <code>request</code> scope with <code>$container-&gt;enterScope( 'request' );</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Checking Named Class Inheritance]]></title>
+    <link href="http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance/"/>
+    <updated>2013-05-24T15:26:00+00:00</updated>
+    <id>http://aequasi.github.io/blog/2013/05/24/checking-named-class-inheritance</id>
+    <content type="html"><![CDATA[<hr />
+
+<p>I have been working on a new cache implementation for the <code>Symfony2</code> framework, and I needed a way to check if a named class inherited a given interface , so i wrote the following:</p>
+
+<p>``` php
+&lt;?php
+function classInherits( $class, $inherit ) {</p>
+
+<pre><code>if( is_object( $class ) ) {
+    return ( $class instanceof $inherit );
+} elseif( is_string( $class ) ) {
+    return (bool) in_array( $inherit, class_implements( $class ) );
+}
+
+throw new Exception( "First value must be the name of a valid class, or an instance of one." );
+</code></pre>
+
+<p>}
+?>
+```</p>
+
+<p>Hope this helps!</p>
+]]></content>
+  </entry>
+  
+</feed>
